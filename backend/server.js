@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
-const testRoutes = require("./routes/testRoutes");
+const moduleRoutes = require("./routes/moduleRoutes");
+const batchcourseRoutes = require("./routes/batchcourseRoutes");
+
 const { PORT } = require("./config");
 const routeNotFound = require("./middlewares/routeNotFound");
 
@@ -8,7 +10,9 @@ const routeNotFound = require("./middlewares/routeNotFound");
 app.use(express.json());
 
 // routes
-app.use("/test", testRoutes);
+app.use("/module", moduleRoutes);
+app.use("/batch_course", batchcourseRoutes);
+
 
 // route not found
 app.use(routeNotFound);
