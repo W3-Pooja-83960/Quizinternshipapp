@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../config/db");
-const { COURSE_TABLE } = require("../config");
+const { COURSE_TABLE } = require("../config/index");
 const { successResponse, errorResponse } = require("../utils/apiResponse");
 
 console.log("course routes loaded");

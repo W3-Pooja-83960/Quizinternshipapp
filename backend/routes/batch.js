@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../config/db");
-const { BATCH_TABLE } = require("../config");
+const { BATCH_TABLE } = require("../config/index");
+
 const { successResponse, errorResponse } = require("../utils/apiResponse");
 
 console.log("Batch routes loaded");
