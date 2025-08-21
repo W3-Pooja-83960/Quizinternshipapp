@@ -1,29 +1,32 @@
 // server.js
 const express = require("express");
+
 const app = express();
-<<<<<<< HEAD
+
 const moduleRoutes = require("./routes/moduleRoutes");
 const batchcourseRoutes = require("./routes/batchcourseRoutes");
 
-=======
->>>>>>> sayali
-const { PORT } = require("./config");
+
+
+const { PORT } = require("./config/index");
+
+
 const routeNotFound = require("./middlewares/routeNotFound");
 const batchRoutes = require("./routes/batch");
 const courseRoutes = require("./routes/course");
-
+const questionRoutes = require("./routes/questions");
 // middlewares
 app.use(express.json());
 
 // routes
-<<<<<<< HEAD
-app.use("/module", moduleRoutes);
-app.use("/batch_course", batchcourseRoutes);
 
-=======
+app.use("/batch_course", batchcourseRoutes);
+app.use("/questions", questionRoutes);
+app.use("/module", moduleRoutes);
+
 app.use("/batch",batchRoutes)
 app.use("/course",courseRoutes);
->>>>>>> sayali
+
 
 // route not found
 app.use("/routeNotFound",routeNotFound);
