@@ -33,8 +33,7 @@ router.get("/all-student-batches", (request, response) => {
   "student_id": 3,
   "batch_id": 4
 }
- */
-
+**/
 router.post("/assign-student-to-batch", (request, response) => {
   const { student_id, batch_id } = request.body;
 
@@ -61,6 +60,8 @@ router.post("/assign-student-to-batch", (request, response) => {
 });
 
 
+  // api no:- (w3-pooja-83960)
+// /assign-students-to-batch (multiple student added in batch)
 
 router.post("/assign-students-to-batch", (req, res) => {
   const { batch_id, student_id } = req.body;
@@ -68,8 +69,6 @@ router.post("/assign-students-to-batch", (req, res) => {
   if (!batch_id || !Array.isArray(student_id) || student_id.length === 0) {
     return res.send(errorResponse("batch_id and student_ids array are required."));
   }
-
-  // api no:-0 (w3-pooja-83960)
   
   const sql = `INSERT INTO ${STUDENT_BATCH_TABLE} (student_id, batch_id) VALUES ?`;
 
