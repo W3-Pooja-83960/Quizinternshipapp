@@ -1,3 +1,4 @@
+
 const express = require("express");
 const { successResponse, errorResponse } = require("../utils/apiResponse");
 //const pool = require("../config/db");
@@ -6,13 +7,10 @@ const pool = require("../config/db");
 const router = express.Router();
 
 
-/**
- * GET /all-student-batches
- * Fetch all student-batch assignments
- */
 
 router.get("/all-student-batches", (request, response) => {
-  const sql = "SELECT * FROM ${STUDENT_BATCH_TABLE}";
+
+  const sql = `SELECT * FROM ${STUDENT_BATCH_TABLE}`;
 
   pool.query(sql, (error, results) => {
     if (error) {
@@ -27,14 +25,8 @@ router.get("/all-student-batches", (request, response) => {
   });
 });
 
-/**
-  * POST /assign-student-to-batch
- * Assign a student to a batch
- * {
- *   student_id: 1,
- *   batch_id: 2
- * }
- */
+
+
 
 router.post("/assign-students-to-batch", (req, res) => {
   const { batch_id, student_id } = req.body;
@@ -64,4 +56,36 @@ router.post("/assign-students-to-batch", (req, res) => {
   });
 });
 
+
+
+
+router.post("/assign-student-to-batch", (request, response) => {
+  const { student_id, batch_id } = request.body;
+
+  if (!student_id || !batch_id) {
+    return response.send(errorResponse("student_id and batch_id are required."));
+  }
+
+  const sql = `INSERT INTO ${STUDENT_BATCH_TABLE} (student_id, batch_id) VALUES (?, ?)`;
+
+  pool.execute(sql, [student_id, batch_id], (error, result) => {
+    if (error) {
+      if (error.code === "ER_DUP_ENTRY") {
+        return response.send(errorResponse("Student already assigned to this batch."));
+      }
+
+      return response.send(errorResponse(error));
+    }
+
+    return response.send(successResponse({
+      message: "Student assigned to batch successfully",
+      insertId: result.insertId
+    }));
+  });
+});
+
+
+
+
 module.exports = router;
+
