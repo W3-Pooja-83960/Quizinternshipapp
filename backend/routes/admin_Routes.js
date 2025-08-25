@@ -1,18 +1,15 @@
-// routes/studentBatch.js
 
 const express = require("express");
 const { successResponse, errorResponse } = require("../utils/apiResponse");
+//const pool = require("../config/db");
 const { STUDENT_BATCH_TABLE } = require("../config");
 const pool = require("../config/db");
-
 const router = express.Router();
 
-/*
- * GET http://localhost:4444/student_batch/assign-student-to-batch
- * Fetch all student-batch assignments
- */
+
 
 router.get("/all-student-batches", (request, response) => {
+
   const sql = `SELECT * FROM ${STUDENT_BATCH_TABLE}`;
 
   pool.query(sql, (error, results) => {
@@ -28,15 +25,40 @@ router.get("/all-student-batches", (request, response) => {
   });
 });
 
-/**  api no -> 05
- * POST http://localhost:4444/student_batch/assign-student-to-batch
- * Assign a student to a batch
- * {
-  "student_id": 3,
-  "batch_id": 4
-}
 
- */
+
+
+router.post("/assign-students-to-batch", (req, res) => {
+  const { batch_id, student_id } = req.body;
+
+  if (!batch_id || !Array.isArray(student_id) || student_id.length === 0) {
+    return res.send(errorResponse("batch_id and student_ids array are required."));
+  }
+
+  // Table name constant
+  const sql = `INSERT INTO ${STUDENT_BATCH_TABLE} (student_id, batch_id) VALUES ?`;
+
+  // Convert student_ids to array of arrays for bulk insert
+  const values = student_id.map(id => [id, batch_id]);
+
+  pool.query(sql, [values], (error, result) => {
+    if (error) {
+      if (error.code === "ER_DUP_ENTRY") {
+        return res.send(errorResponse("One or more students are already assigned to this batch."));
+      }
+      return res.send(errorResponse(error));
+    }
+
+    return res.send(successResponse({
+      message: "Students assigned to batch successfully",
+      affectedRows: result.affectedRows
+    }));
+  });
+});
+
+
+
+
 router.post("/assign-student-to-batch", (request, response) => {
   const { student_id, batch_id } = request.body;
 
@@ -66,3 +88,4 @@ router.post("/assign-student-to-batch", (request, response) => {
 
 
 module.exports = router;
+
