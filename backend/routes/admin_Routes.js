@@ -1,13 +1,22 @@
 
 const express = require("express");
 const { successResponse, errorResponse } = require("../utils/apiResponse");
-//const pool = require("../config/db");
+const { BATCH_TABLE } = require("../../config");
+const { COURSE_TABLE } = require("../../config");
 const { STUDENT_BATCH_TABLE } = require("../config");
 const pool = require("../config/db");
 const router = express.Router();
 
 
+//GET-Get all staffs
 
+//POST-Adds a new staff
+
+//PUT-Updates staff details by staffId
+
+//DELETE-Removes staff by Id
+
+//GET- Get all registered students
 router.get("/all-student-batches", (request, response) => {
 
   const sql = `SELECT * FROM ${STUDENT_BATCH_TABLE}`;
@@ -27,7 +36,7 @@ router.get("/all-student-batches", (request, response) => {
 
 
 
-
+//POST- Adds student to a batch
 router.post("/assign-students-to-batch", (req, res) => {
   const { batch_id, student_id } = req.body;
 
@@ -56,9 +65,7 @@ router.post("/assign-students-to-batch", (req, res) => {
   });
 });
 
-
-
-
+//POST- Adds multiple students to a batch
 router.post("/assign-student-to-batch", (request, response) => {
   const { student_id, batch_id } = request.body;
 
@@ -83,6 +90,61 @@ router.post("/assign-student-to-batch", (request, response) => {
     }));
   });
 });
+
+//GET- Get all students which are present in a batch
+
+//POST- Adds student to a course
+
+//POST- Adds multiple students to a course
+
+//GET - Get all students which are present in a batch
+router.get("/all-students-with-batch/:batch_id", (req, res) => {
+  const { batch_id } = req.params;
+
+  const sql = `SELECT s.student_id, s.firstName, s.lastName, s.email, s.prnNo, 
+                      c.course_name,
+                      b.batch_name
+                    FROM ${STUDENTS_TABLE} s
+                    JOIN ${COURSE_TABLE } c ON s.course_id = c.course_id
+                    JOIN ${BATCH_TABLE} b ON s.batch_id = b.batch_id
+                    WHERE b.batch_id = 1`;  
+
+  pool.query(sql, [batch_id], (err, results) => {
+    if (err) {
+      console.error("Database error:", err);
+      return res.status(500).json({ status: "error", message: "Database error", error: err });
+    }
+
+    if (results.length === 0) {
+      return res.json({
+        status: "success",
+        message: "No students found in this batch",
+        data: []
+      });
+    }
+
+    res.json({ status: "success", data: results });
+  });
+});
+
+//POST- Adds student to a course 
+
+//POST- Adds multiple students to a course
+
+//GET- Get all students which are present in a course
+
+//PUT- Updates student record batch and course
+
+//GET-Shows all assigned students (optional: courseId, groupId)
+
+
+
+
+
+
+
+
+
 
 
 
