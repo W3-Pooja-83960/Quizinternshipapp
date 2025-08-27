@@ -2,8 +2,9 @@
 const express = require("express");
 const { successResponse, errorResponse } = require("../utils/apiResponse");
 
-const { BATCH_TABLE } = require("../../config");
-const { COURSE_TABLE } = require("../../config");
+const { BATCH_TABLE } = require("../config");
+const { COURSE_TABLE } = require("../config");
+const{ STUDENTS_TABLE } = require("../config")
 const { STUDENT_BATCH_TABLE } = require("../config");
 const pool = require("../config/db");
 const router = express.Router();
@@ -140,6 +141,8 @@ router.post("/assign-student-to-batch", (request, response) => {
 
 //POST- Adds multiple students to a course
 
+
+
 //GET - Get all students which are present in a batch
 router.get("/all-students-with-batch/:batch_id", (req, res) => {
   const { batch_id } = req.params;
@@ -173,6 +176,83 @@ router.get("/all-students-with-batch/:batch_id", (req, res) => {
 //POST- Adds student to a course 
 
 //POST- Adds multiple students to a course
+/** api no -> (W2-83955-Shubham)
+ * POST http://localhost:4444/student_course/assign-students-to-course
+ * {
+ *   "course_id": 2001,
+ *   "student_ids": [1, 2, 5]
+ * }
+ */
+router.post("/assign-students-to-course", (req, res) => {
+  console.log("current api");
+  const { course_id, student_ids } = req.body;
+
+  if (!course_id || !Array.isArray(student_ids) || student_ids.length === 0) {
+    return res.send(errorResponse("course_id and student_ids array are required."));
+  }
+
+  const sql = `UPDATE ${STUDENTS_TABLE} SET course_id = ? WHERE student_id = ?`;
+
+  let updatedCount = 0;
+  let errors = [];
+
+  student_ids.forEach((id, index) => {
+    pool.execute(sql, [course_id, id], (err, result) => {
+      if (err) {
+        errors.push({ student_id: id, error: err.message });
+      } else if (result.affectedRows > 0) {
+        updatedCount++;
+      }
+
+      // send response after all queries processed
+      if (index === student_ids.length - 1) {
+        return res.send(successResponse({
+          message: "Bulk student-course assignment complete",
+          updatedCount,
+          errors
+        }));
+      }
+    });
+  });
+});
+/** api no -> (shubham banarse)
+ * POST http://localhost:4444/student_course/assign-students-to-course
+ * {
+ *   "course_id": 2001,
+ *   "student_ids": [1, 2, 5]
+ * }
+ */
+router.post("/assign-students-to-course", (req, res) => {
+  const { course_id, student_ids } = req.body;
+
+  if (!course_id || !Array.isArray(student_ids) || student_ids.length === 0) {
+    return res.send(errorResponse("course_id and student_ids array are required."));
+  }
+
+  const sql = `UPDATE ${STUDENTS_TABLE} SET course_id = ? WHERE student_id = ?`;
+
+  let updatedCount = 0;
+  let errors = [];
+
+  student_ids.forEach((id, index) => {
+    pool.execute(sql, [course_id, id], (err, result) => {
+      if (err) {
+        errors.push({ student_id: id, error: err.message });
+      } else if (result.affectedRows > 0) {
+        updatedCount++;
+      }
+
+      // send response after all queries processed
+      if (index === student_ids.length - 1) {
+        return res.send(successResponse({
+          message: "Bulk student-course assignment complete",
+          updatedCount,
+          errors
+        }));
+      }
+    });
+  });
+});
 
 //GET- Get all students which are present in a course
 
