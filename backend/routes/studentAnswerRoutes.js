@@ -7,8 +7,7 @@ const { QUESTIONS_TABLE } = require("../config");
 const { STUDENTS_TABLE } = require("../config");
 
 
-
-// GET /stud-answers/:quiz_id/:student_id
+// GET
 router.get("/stud-answers/:quiz_id/:student_id", (req, res) => {
     const { quiz_id, student_id } = req.params;
 
@@ -18,7 +17,7 @@ router.get("/stud-answers/:quiz_id/:student_id", (req, res) => {
                          sa.studentAnswer_id,sa.questions_id,sa.is_correct
                   FROM ${STUDENTS_ANS_TABLE} sa
                   JOIN ${STUDENTS_QUIZ_TABLE} sq ON sq.attempt_id = sa.attempt_id
-                  JOIN ${STUDENTS_TABLE}s ON s.student_id = sq.student_id
+                  JOIN ${STUDENTS_TABLE} s ON s.student_id = sq.student_id
                   JOIN ${QUESTIONS_TABLE} q ON q.question_id = sa.questions_id
                   WHERE sq.quiz_id = ?`;
 
@@ -30,92 +29,114 @@ router.get("/stud-answers/:quiz_id/:student_id", (req, res) => {
 });
 
 
-//post /submit-answer
+//post-to add single answer
 router.post("/stud-ans/add-single-ans", (req, res) => {
   const { attempt_id, questions_id, is_correct } = req.body;
 
   if (attempt_id === undefined || questions_id === undefined || is_correct === undefined) {
-   return res.json({ error: "Missing required fields" });
-}
-  
-  const sql = `INSERT INTO ${ STUDENTS_ANS_TABLE } (attempt_id, questions_id, is_correct) 
-               VALUES (?, ?, ?)`;
+    return res.json({ status: "error", message: "Missing required fields" });
+  }
 
-  pool.query(sql, [attempt_id, questions_id,  is_correct], (err, result) => {
-   if (err) {
-  console.error("❌ SQL Error:", err); // logs full error in terminal
-  return res.status(500).json({
-                                  status: "error",
-                                  message: "Database error occurred",
-                                  error: {
-                                    code: err.code,
-                                    errno: err.errno,
-                                    sqlState: err.sqlState,
-                                    sqlMessage: err.sqlMessage,
-                                    sql: err.sql
-                                  }
-                               });
-}
-    res.status(201).json({
-      success: true,
-      studentAnswer_id: result.insertId,
+  const insertSql = `INSERT INTO ${STUDENTS_ANS_TABLE} (attempt_id, questions_id, is_correct) VALUES (?, ?, ?)`;
+
+  pool.query(insertSql, [attempt_id, questions_id, is_correct], (err, result) => {
+    if (err) return res.status(500).json({ status: "error", message: err.sqlMessage });
+
+    // Recalculate total score
+    const recalcSql = `SELECT SUM(is_correct) AS total_score FROM ${STUDENTS_ANS_TABLE} WHERE attempt_id = ?`;
+    pool.query(recalcSql, [attempt_id], (err2, scoreResult) => {
+      if (err2) return res.status(500).json({ status: "error", message: err2.sqlMessage });
+
+      const newScore = scoreResult[0].total_score || 0;
+
+      const updateQuizSql = `UPDATE ${STUDENTS_QUIZ_TABLE} SET score = ? WHERE attempt_id = ?`;
+      pool.query(updateQuizSql, [newScore, attempt_id], (err3) => {
+        if (err3) return res.status(500).json({ status: "error", message: err3.sqlMessage });
+
+        return res.status(201).json({
+          status: "success",
+          message: "Answer added and score updated",
+          attempt_id,
+          studentAnswer_id: result.insertId,
+          newScore
+        });
+      });
     });
   });
 });
 
-
-//post
+//POST-to add multiple answers and update score
 router.post("/add-multiple-ans", (req, res) => {
   const { answers } = req.body;
 
-  // Validation
   if (!answers || !Array.isArray(answers) || answers.length === 0) {
-    return res.status(400).json({ error: "Answers array is required" });
+    return res.status(400).json({ status: "error", message: "Answers array is required" });
   }
 
-  // Convert objects to array of arrays for MySQL
   const values = answers.map(a => [a.attempt_id, a.questions_id, a.is_correct]);
 
-  // Single query for all answers
-  const statement = `
-    INSERT INTO studentAnswer (attempt_id, questions_id, is_correct)
+  const insertSql = `
+    INSERT INTO ${STUDENTS_ANS_TABLE} (attempt_id, questions_id, is_correct)
     VALUES ?
     ON DUPLICATE KEY UPDATE is_correct = VALUES(is_correct)
   `;
 
-  pool.query(statement, [values], (error, result) => {
-    if (error) {
-      return res.status(500).json({ error: error.message });
-    }
+  pool.query(insertSql, [values], (err) => {
+    if (err) return res.status(500).json({ status: "error", message: err.sqlMessage });
 
-    res.json({ status: "success", message: "All answers saved/updated" });
+    // Recalculate score 
+    const attempt_id = answers[0].attempt_id;
+    const recalcSql = `SELECT SUM(is_correct) AS total_score FROM ${STUDENTS_ANS_TABLE} WHERE attempt_id = ?`;
+    
+    pool.query(recalcSql, [attempt_id], (err2, scoreResult) => {
+      if (err2) return res.status(500).json({ status: "error", message: err2.sqlMessage });
+
+      const newScore = scoreResult[0].total_score || 0;
+
+      const updateQuizSql = `UPDATE ${STUDENTS_QUIZ_TABLE} SET score = ? WHERE attempt_id = ?`;
+      pool.query(updateQuizSql, [newScore, attempt_id], (err3) => {
+        if (err3) return res.status(500).json({ status: "error", message: err3.sqlMessage });
+
+        return res.json({ status: "success", message: "Answers saved and score updated", newScore });
+      });
+    });
   });
 });
 
-
-//put method
+//PUT- update existing answer and synchronize the score
 router.put("/update/:studentAnswer_id", (req, res) => {
   const { attempt_id, questions_id, is_correct } = req.body;
+const { studentAnswer_id } = req.params;
 
-  // validation 
-  if ( attempt_id === undefined || questions_id === undefined || is_correct === undefined ) {
-    return res.status(400).json({ error: "Missing required fields" });
-  }
+const updateAnswerSql = `UPDATE ${STUDENTS_ANS_TABLE}
+                         SET is_correct = ?
+                         WHERE studentAnswer_id = ?`;
 
-  const statement = `UPDATE ${ STUDENTS_ANS_TABLE } SET is_correct = ? WHERE attempt_id = ? AND questions_id = ? `;
+pool.query(updateAnswerSql, [is_correct, studentAnswer_id], (err, result) => {
+  if (err) return res.status(500).json({ error: err.message });
+  if (result.affectedRows === 0) return res.status(404).json({ message: "Answer not found" });
 
-  pool.execute( statement,[is_correct, attempt_id, questions_id],(error, result) => {
-      if (error) {
-        return res.status(500).json({ error: error.message });
-      }
+  // Recalculate total score 
+  const recalcScoreSql = `SELECT SUM(is_correct) AS total_score FROM ${STUDENTS_ANS_TABLE} WHERE attempt_id = ?`;
+  pool.query(recalcScoreSql, [attempt_id], (err2, scoreResult) => {
+    if (err2) return res.status(500).json({ error: err2.message });
 
-      if (result.affectedRows === 0) {
-        return res.status(404).json({ message: "Answer not found" });
-      }
+    const newScore = scoreResult[0].total_score || 0;
 
-      return res.json({ status: "success", message: "Answer updated" });
-    }
-  );
+    const updateQuizSql = `UPDATE ${STUDENTS_QUIZ_TABLE} SET score = ? WHERE attempt_id = ?`;
+    pool.query(updateQuizSql, [newScore, attempt_id], (err3) => {
+      if (err3) return res.status(500).json({ error: err3.message });
+
+      return res.json({
+        status: "success",
+        message: "Answer updated and score synchronized",
+        attempt_id,
+        newScore
+      });
+    });
+  });
 });
+});
+
 
 module.exports = router;

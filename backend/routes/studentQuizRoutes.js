@@ -1,50 +1,42 @@
-const express = require("express");
-const router = express.Router();
-const pool = require("../config/db");
-const { STUDENTS_QUIZ_TABLE } = require("../config");
-const { QUIZ_TABLE } = require("../config");
-const { STUDENTS_ANS_TABLE } = require("../config");
-const { MODULE_TABLE } = require("../config");
-const { QUESTIONS_TABLE } = require("../config");
+const express = require("express"); 
+const router = express.Router(); 
+const pool = require("../config/db"); 
+const { STUDENTS_QUIZ_TABLE } = require("../config"); 
+const { QUIZ_TABLE } = require("../config"); 
+const { STUDENTS_ANS_TABLE } = require("../config"); 
+const { MODULE_TABLE } = require("../config"); 
+const { QUESTIONS_TABLE } = require("../config"); 
 const { successResponse, errorResponse } = require("../utils/apiResponse");
 
-
-// ✅ Get all quiz attempts of a student with details
+// Get all quiz attempts of a student 
 router.get("/all-quiz/:student_id", (req, res) => {
-  const { student_id } = req.params;
+  const { student_id } = req.params; 
 
-  console.log(`Fetching all quiz attempts for student_id= ${student_id}`);
-
- const sql = `SELECT  sq.quiz_id, q.quiz_title, m.module_name,
-              COUNT(sa.questions_id) AS total_attempted,
-              SUM(sa.is_correct) AS correct_answers,
-              SUM(sq.score) AS total_score
-              FROM ${STUDENTS_QUIZ_TABLE} sq
+  const sql = `SELECT sq.quiz_id, q.quiz_title, m.module_name,
+               COUNT(sa.questions_id) AS total_attempted,
+               SUM(sa.is_correct) AS correct_answers,
+               SUM(sq.score) AS total_score
+               FROM ${STUDENTS_QUIZ_TABLE} sq
               JOIN ${QUIZ_TABLE} q ON sq.quiz_id = q.quiz_id
               JOIN ${MODULE_TABLE} m ON q.module_id = m.module_id
               LEFT JOIN ${STUDENTS_ANS_TABLE} sa ON sq.attempt_id = sa.attempt_id
               WHERE sq.student_id = ?
               GROUP BY sq.quiz_id, q.quiz_title, m.module_name `;
 
-  console.log("Running DB query for student quiz attempts...")
-pool.query(sql, [student_id], (error, results) => {
-    if (error) {
-      return res.send(errorResponse(error));
-    }
+  pool.query(sql, [student_id], (error, results) => {
+    if (error) return res.send(errorResponse(error));
 
     if (results.length === 0) {
-      return res.send(successResponse("No quiz data found for this student."));
+      return res.send(successResponse("No quiz attempts found for this student."));
     }
-
-     if (results.length === 0) return res.send(errorResponse("Student not found"));
 
     return res.send(successResponse(results));
   });
 });
 
 
-// ✅ Get a specific quiz attempt of a student
-router.get("/student-quiz/:student_id/:attempt_id", (req, res) => {
+// GET - specific quiz attempt of a student
+router.get("/stud-quiz/:student_id/:attempt_id", (req, res) => {
   const { student_id, attempt_id } = req.params;
   console.log(`Fetching attempt_id=${attempt_id} for student_id=${student_id}`);
 
@@ -72,7 +64,7 @@ router.get("/student-quiz/:student_id/:attempt_id", (req, res) => {
 
 
 
-// ✅ Get question attempts for a specific quiz
+// GET-question attempts for a specific quiz
 router.get("/:student_id/quiz/:quiz_id/questions", (req, res) => {
   const { student_id, quiz_id } = req.params;
   console.log(`Fetching question attempts for student_id=${student_id}, quiz_id=${quiz_id}`);
@@ -97,38 +89,44 @@ router.get("/:student_id/quiz/:quiz_id/questions", (req, res) => {
 });
 
 
-// ✅ Add a new quiz attempt with answers
+// POST- add new quiz attempt with answers
 router.post("/add-quiz-attempt", (req, res) => {
-  const { student_id, quiz_id, score, answers } = req.body;
+  const { student_id, quiz_id, answers } = req.body;
 
-  // 1. Validate input
-  if (!student_id || !quiz_id || score === undefined || !answers || !answers.length) {
+  // Validate i/p
+  if (!student_id || !quiz_id || !answers || !answers.length) {
     return res.send({ status: "error", message: "All fields required including answers" });
   }
 
-  // 2. Insert into StudentQuiz  
-  const insertQuizSql = `INSERT INTO ${STUDENTS_QUIZ_TABLE}  (student_id, quiz_id, score) VALUES (?, ?, ?)`;
+  // Calculate score from answers
+  const score = answers.filter(a => a.is_correct === 1).length;
+
+  // Insert into STUDENTS_QUIZ_TABLE
+  const insertQuizSql = `INSERT INTO ${STUDENTS_QUIZ_TABLE} (student_id, quiz_id, score) VALUES (?, ?, ?)`;
+
   pool.query(insertQuizSql, [student_id, quiz_id, score], (err, result) => {
-    if (err) return res.send({ status: "error", message: err.sqlMessage });
+    if (err) return res.send({ status: "error", message: err.sqlMessage || err });
 
-    const attempt_id = result.insertId; // Get the new attempt_id
+    if (!result || !result.insertId) {
+      return res.send({ status: "error", message: "Failed to insert quiz attempt" });
+    }
 
-    // 3. Prepare answers for insertion
+    const attempt_id = result.insertId;
+
+    // Prepare answers for insertion
     const answerData = answers.map(a => [attempt_id, a.question_id, a.is_correct]);
 
-    // 4. Insert all answers into STUDENTS_ANS_TABLE
     const insertAnswerSql = `INSERT INTO ${STUDENTS_ANS_TABLE} (attempt_id, questions_id, is_correct) VALUES ?`;
-    pool.query(insertAnswerSql, [answerData], (err2) => {
-      if (err2) return res.send({ status: "error", message: err2.sqlMessage });
 
-      // 5. Send success response
-      res.send({ status: "success", message: `Quiz attempt added with id=${attempt_id}` });
+    pool.query(insertAnswerSql, [answerData], (err2) => {
+      if (err2) return res.send({ status: "error", message: err2.sqlMessage || err2 });
+
+      return res.send({ status: "success", message: `Quiz attempt added with id=${attempt_id}`, attempt_id, score });
     });
   });
 });
 
-
-// ✅ PUT - Update student's answer for a question and update total score
+//PUT-update answers
 router.put("/update-answer", (req, res) => {
   const { attempt_id, question_id, is_correct } = req.body;
 
@@ -136,24 +134,24 @@ router.put("/update-answer", (req, res) => {
     return res.send({ status: "error", message: "All fields are required" });
   }
 
-  // 1. Update the answer in STUDENTS_ANS_TABLE
-  const updateAnswerSql = ` UPDATE ${STUDENTS_ANS_TABLE} SET is_correct = ? 
-                             WHERE attempt_id = ? AND questions_id = ?  `;
+  //update
+  const updateAnswerSql = `UPDATE ${STUDENTS_ANS_TABLE} SET is_correct = ? 
+                           WHERE attempt_id = ? AND questions_id = ?`;
 
   pool.query(updateAnswerSql, [is_correct, attempt_id, question_id], (err) => {
     if (err) return res.send({ status: "error", message: err.sqlMessage });
 
-    // 2. Recalculate total correct answers for this attempt
-    const recalcScoreSql = ` SELECT SUM(is_correct) AS total_score
-                              FROM ${ STUDENTS_ANS_TABLE } WHERE attempt_id = ? `;
+    //Recalculate total correct answers
+    const recalcScoreSql = `SELECT SUM(is_correct) AS total_score
+                             FROM ${STUDENTS_ANS_TABLE} WHERE attempt_id = ?`;
 
     pool.query(recalcScoreSql, [attempt_id], (err2, result) => {
       if (err2) return res.send({ status: "error", message: err2.sqlMessage });
 
       const newScore = result[0].total_score || 0;
 
-      // 3. Update STUDENTS_QUIZ_TABLE with new total score
-      const updateQuizScoreSql = ` UPDATE ${ STUDENTS_QUIZ_TABLE } SET score = ?  WHERE attempt_id = ? `;
+      // Update table with new total score
+      const updateQuizScoreSql = `UPDATE ${STUDENTS_QUIZ_TABLE} SET score = ? WHERE attempt_id = ?`;
 
       pool.query(updateQuizScoreSql, [newScore, attempt_id], (err3) => {
         if (err3) return res.send({ status: "error", message: err3.sqlMessage });
@@ -170,19 +168,19 @@ router.put("/update-answer", (req, res) => {
 });
 
 
-// ✅ DELETE - Remove a quiz attempt
+// DELETE - Remove quiz attempt
 router.delete("/delete/:attempt_id/", (req, res) => {
   const { attempt_id } = req.params;
 
   if (!attempt_id) return res.send({ status: "error", message: "attempt_id required" });
-
-  // 1. Delete from STUDENTS_ANS_TABLE first
+ 
+  //delete from STUDENTS_ANS_TABLE-fk constraint
   const deleteAnswersSql = `DELETE FROM ${STUDENTS_ANS_TABLE} WHERE attempt_id = ? `;
-
+  
   pool.query(deleteAnswersSql, [attempt_id], (err) => {
     if (err) return res.send({ status: "error", message: err.sqlMessage });
 
-    // 2. Delete from STUDENTS_QUIZ_TABLE
+    //delete from STUDENTS_QUIZ_TABLE
     const deleteQuizSql = `DELETE FROM ${ STUDENTS_QUIZ_TABLE } WHERE attempt_id = ?`
     pool.query(deleteQuizSql, [attempt_id], (err2) => {
       if (err2) return res.send({ status: "error", message: err2.sqlMessage });

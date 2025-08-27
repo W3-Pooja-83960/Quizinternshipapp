@@ -5,7 +5,8 @@ const { BATCH_TABLE } = require("../config");
 const { successResponse, errorResponse } = require("../utils/apiResponse");
 
 console.log("Batch routes loaded");
-// ✅ Get all batches
+
+// Get all batches
 router.get("/all-batch", (request, response) => {
   console.log("Fetching all batches...");
   const sql = `SELECT * FROM ${BATCH_TABLE}`;
@@ -25,7 +26,7 @@ router.get("/all-batch", (request, response) => {
   });
 });
 
-// ✅ Get batch by ID
+// Get batch by ID
 router.get("/:id", (request, response) => {
   const { id } = request.params;
   const sql = `SELECT * FROM ${BATCH_TABLE} WHERE batch_id = ?`;
@@ -48,20 +49,30 @@ router.get("/:id", (request, response) => {
 //add batch
 router.post("/add-batch", (req, res) => {
   const { batch_name, start_date, end_date } = req.body;
+
+  // Check 
+  if (!batch_name) {
+    return res.status(400).json({ status: "error",  message: "batch_name is required.", });
+  }
+  if (!start_date) {
+    return res.status(400).json({ status: "error",  message: "start_date is required.", });
+  }
+  if (!end_date) {
+    return res.status(400).json({ status: "error",  message: "end_date is required.",  });
+  }
+
   const sql = `INSERT INTO ${BATCH_TABLE} (batch_name, start_date, end_date) VALUES (?, ?, ?)`;
 
   console.log("Incoming body:", req.body);
+pool.query(sql, [batch_name, start_date, end_date], (error, result) => {
+  if (error) {
+    console.error("DB error:", error);
+    return res.status(500).send(errorResponse(error));
+  }
+  console.log("Batch inserted successfully");
+  return res.send(successResponse("Batch added successfully."));
+});
 
-  console.log("Running DB query...");
-  pool.query(sql, [batch_name, start_date, end_date], (error, result) => {
-    console.log("DB query callback fired");
-    if (error) {
-      console.error("DB error:", error);
-      return res.status(500).send(errorResponse(error));
-    }
-    console.log("Batch inserted successfully");
-    return res.send(successResponse("Batch added successfully."));
-  });
 });
 
 
@@ -70,8 +81,16 @@ router.put("/update-batch/:id", (req, res) => {
   const { id } = req.params;
   const { batch_name,start_date,end_date } = req.body;
 
+
+  // Check fields 
   if (!batch_name) {
-    return res.status(400).json(errorResponse("Batch name is required."));
+    return res.status(400).json({status: "error", message: "batch_name is required."  });
+  }
+  if (!start_date) {
+    return res.status(400).json({status: "error", message: "start_date is required."});
+  }
+  if (!end_date) {
+    return res.status(400).json({status: "error",message: "end_date is required." });
   }
 
   const sql = `UPDATE ${BATCH_TABLE} SET batch_name = ?, start_date = ?, end_date = ? WHERE batch_id = ?`;
@@ -82,14 +101,15 @@ router.put("/update-batch/:id", (req, res) => {
     }
 
     if (result.affectedRows === 0) {
-      return res.status(404).json(successResponse("Batch not found."));
+      return res.status(404).json(errorResponse("Batch not found."));
     }
 
     return res.json(successResponse("Batch updated successfully."));
   });
 });
 
-// ✅ Delete batch
+
+// Delete batch
 router.delete("/delete-batch/:id", (req, res) => {
   const { id } = req.params;
 

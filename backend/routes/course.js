@@ -5,7 +5,8 @@ const { COURSE_TABLE } = require("../config");
 const { successResponse, errorResponse } = require("../utils/apiResponse");
 
 console.log("course routes loaded");
-// ✅ Get all courses
+
+// Get all courses
 router.get("/all-course", (request, response) => {
   console.log("Fetching all courses...");
   const sql = `SELECT * FROM ${COURSE_TABLE}`;
@@ -25,7 +26,7 @@ router.get("/all-course", (request, response) => {
   });
 });
 
-// ✅ Get course by ID
+// Get course by ID
 router.get("/:id", (request, response) => {
   const { id } = request.params;
   const sql = `SELECT * FROM ${COURSE_TABLE} WHERE course_id = ?`;
@@ -50,9 +51,6 @@ router.post("/add-course", (req, res) => {
   const { course_id, course_name } = req.body;
   const sql = `INSERT INTO ${COURSE_TABLE} (course_id, course_name) VALUES (?, ?)`;
 
-  console.log("Incoming body:", req.body);
-
-  console.log("Running DB query...");
   pool.query(sql, [course_id, course_name], (error, result) => {
     console.log("DB query callback fired");
     if (error) {
@@ -63,10 +61,12 @@ router.post("/add-course", (req, res) => {
     return res.send(successResponse("Batch added successfully."));
   });
 });
-// ✅ Update course
+
+
+// Update course
 router.put("/update-course/:id", (req, res) => {
-  const { id } = req.params;                // course_id from URL
-  const { course_name } = req.body;         // new name from body
+  const { id } = req.params;                
+  const { course_name } = req.body;         
 
   if (!course_name) {
     return res.status(400).json(errorResponse("Course name is required."));
