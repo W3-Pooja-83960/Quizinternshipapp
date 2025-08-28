@@ -57,8 +57,8 @@ router.post("/add-course", (req, res) => {
       console.error("DB error:", error);
       return res.status(500).send(errorResponse(error));
     }
-    console.log("Batch inserted successfully");
-    return res.send(successResponse("Batch added successfully."));
+    console.log("Course inserted successfully");
+    return res.send(successResponse("Course added successfully."));
   });
 });
 
@@ -100,10 +100,10 @@ router.delete("/delete-course/:id", (req, res) => {
     }
 
     if (result.affectedRows === 0) {
-      return res.status(404).json(successResponse("Batch not found."));
+      return res.status(404).json(successResponse("Course not found."));
     }
 
-    return res.json(successResponse("Batch deleted successfully."));
+    return res.json(successResponse("Course deleted successfully."));
   });
 });
 
