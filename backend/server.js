@@ -1,11 +1,12 @@
 const express = require("express");
 const app = express();
-
-const pool = require("./config/db"); // ✅ added
-
+<<<<<<< HEAD
 const moduleRoutes = require("./routes/moduleRoutes");
 const batchcourseRoutes = require("./routes/batchcourseRoutes");
-const { PORT } = require("./config/index");
+
+=======
+>>>>>>> sayali
+const { PORT } = require("./config");
 const routeNotFound = require("./middlewares/routeNotFound");
 const batchRoutes = require("./routes/batch");
 const courseRoutes = require("./routes/course");
@@ -16,13 +17,15 @@ const adminRoutes = require("./routes/admin");
 app.use(express.json());
 
 // routes
-app.use("/batch_course", batchcourseRoutes);
-app.use("/questions", questionRoutes);
+<<<<<<< HEAD
 app.use("/module", moduleRoutes);
-app.use("/batch", batchRoutes);
-app.use("/course", courseRoutes);
-app.use("/api/quiz", quizRoutes);
-app.use("/admin", adminRoutes);
+app.use("/batch_course", batchcourseRoutes);
+
+=======
+app.use("/batch",batchRoutes)
+app.use("/course",courseRoutes);
+>>>>>>> sayali
+
 // route not found
 app.use("/routeNotFound", routeNotFound);
 
