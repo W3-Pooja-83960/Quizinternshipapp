@@ -1,31 +1,26 @@
 const express = require("express");
 const app = express();
-<<<<<<< HEAD
 const moduleRoutes = require("./routes/moduleRoutes");
 const batchcourseRoutes = require("./routes/batchcourseRoutes");
-
-=======
->>>>>>> sayali
-const { PORT } = require("./config");
+const { PORT } = require("./config");   // Only get PORT from config
+const pool = require("./config/db");    // Import pool from db.js
 const routeNotFound = require("./middlewares/routeNotFound");
 const batchRoutes = require("./routes/batch");
 const courseRoutes = require("./routes/course");
-const questionRoutes = require("./routes/questions");
+//const questionRoutes = require("./routes/questions");
 const quizRoutes = require("./routes/quiz");
-const adminRoutes = require("./routes/admin");
+const adminRoutes = require("./routes/admin_Routes");
 // middlewares
 app.use(express.json());
 
 // routes
-<<<<<<< HEAD
 app.use("/module", moduleRoutes);
 app.use("/batch_course", batchcourseRoutes);
-
-=======
-app.use("/batch",batchRoutes)
-app.use("/course",courseRoutes);
->>>>>>> sayali
-
+app.use("/batch", batchRoutes);
+app.use("/course", courseRoutes);
+//app.use("/questions", questionRoutes);
+app.use("/quiz", quizRoutes);
+app.use("/adminRoutes",adminRoutes);
 // route not found
 app.use("/routeNotFound", routeNotFound);
 
