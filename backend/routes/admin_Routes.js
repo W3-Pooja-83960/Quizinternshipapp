@@ -18,10 +18,30 @@ const router = express.Router();
 
 //DELETE-Removes staff by Id
 
-//GET- Get all registered students
-/*
- * GET http://localhost:4444/student_batch/assign-student-to-batch
- * Fetch all student-batch assignments (shubhsbhykr07)
+// Get- all student (shubhsbhykr07) 
+//Get all registered students
+
+router.get("/all-students", (request, response) => {
+  const sql = `SELECT * FROM ${STUDENTS_TABLE}`;
+
+  pool.query(sql, (error, results) => {
+    if (error) {
+      return response.send(errorResponse(error));
+    }
+
+    if (results.length === 0) {
+      return response.send(successResponse("No students found."));
+    }
+
+    return response.send(successResponse(results));
+  });
+});
+
+
+
+//GET- Get all registered students which present in a batch
+ /* GET url: http://localhost:4444/student_batch/assign-student-to-batch
+ * Fetch all student-batch table (shubhsbhykr07)
  */
 
 router.get("/all-student-batches", (request, response) => {
@@ -41,9 +61,9 @@ router.get("/all-student-batches", (request, response) => {
   });
 });
 
-/**  api no -> 05 (shubhsbhykr07)
- * POST http://localhost:4444/student_batch/assign-student-to-batch
- * Assign a student to a batch
+/** POST Add Student to a Batch(shubhsbhykr07)
+ * url: http://localhost:4444/student_batch/assign-student-to-batch
+ * Assign-a-student-to-a-batch 
  * {
   "student_id": 3,
   "batch_id": 4
@@ -76,9 +96,8 @@ router.post("/assign-student-to-batch", (request, response) => {
 
 
 
-//POST- Adds student to a batch
-
-  // api no:- (w3-pooja-83960)
+//POST- Adds students to a batch
+// api no:- (w3-pooja-83960)
 // /assign-students-to-batch (multiple student added in batch)
 
 
