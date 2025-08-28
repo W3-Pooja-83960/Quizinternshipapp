@@ -257,6 +257,22 @@ router.post("/assign-students-to-course", (req, res) => {
 //GET- Get all students which are present in a course
 
 //PUT- Updates student record batch and course
+router.put("/update-student-record/:student_id", (req, res) => {
+  const { student_id } = req.params;
+  const data = req.body;
+
+  if (!Object.keys(data).length) return res.send({ status: "error", message: "No data given" });
+
+  console.log("Updating student ID:", student_id, "with data:", data);
+
+  const sql = `UPDATE ${STUDENTS_TABLE} SET ? WHERE student_id=?`;
+
+  pool.query(sql, [data, student_id], (err, result) => {
+    if (err) return res.send({ status: "error", message: "DB error" });
+    if (result.affectedRows === 0) return res.send({ status: "error", message: "Student not found" });
+    res.send({ status: "success", message: "Student updated" });
+  });
+});
 
 //GET-Shows all assigned students (optional: courseId, groupId)
 
