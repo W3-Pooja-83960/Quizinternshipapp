@@ -20,6 +20,7 @@ router.get("/all-staff", (request, response) => {
   });
 });
 
+// add a staff
 router.post("/add", (request, response) => {
   const { firstName, lastName, email, password } = request.body;
   const sql = `INSERT INTO ${STAFF_TABLE} (firstName, lastName, email, password) VALUES (?, ?, ?, ?)`;
