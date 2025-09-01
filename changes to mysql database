@@ -88,6 +88,7 @@ VALUES
 ALTER TABLE students ADD batch_id INT;
 
 UPDATE students SET batch_id = 1 WHERE student_id = 1;
+
 UPDATE students SET batch_id = 2 WHERE student_id = 2;
 
 ----------------------------------------------------------------

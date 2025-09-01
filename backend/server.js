@@ -9,16 +9,19 @@ const optionsRoutes = require("./routes/optionsRoutes");
 const course_moduleRoutes = require("./routes/course_moduleRoutes");
 const admin_Routes = require("./routes/admin_Routes");
 const { PORT } = require("./config");
+
 const routeNotFound = require("./middlewares/routeNotFound");
 const batchRoutes = require("./routes/batch");
 const courseRoutes = require("./routes/course");
-const questionRoutes = require("./routes/questions");
+//const questionRoutes = require("./routes/questions");
 const quizRoutes = require("./routes/quiz");
-const adminRoutes = require("./routes/admin");
+const adminRoutes = require("./routes/admin_Routes");
 // middlewares
 app.use(express.json());
 
 // routes
+app.use("/quiz", quizRoutes);
+app.use("/adminRoutes",adminRoutes);
 app.use("/student", studentsRoutes);
 app.use("/course_module", course_moduleRoutes);
 app.use("/module", moduleRoutes);
