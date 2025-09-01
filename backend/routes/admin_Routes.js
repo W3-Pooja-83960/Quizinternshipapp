@@ -10,7 +10,7 @@ const pool = require("../config/db");
 const router = express.Router();
 
 
-//GET-Get all staffs
+// Get all staff
 router.get("/all-staff", (request, response) => {
   const sql = `SELECT * FROM ${STAFF_TABLE}`;
   pool.query(sql, (error, results) => {
@@ -20,7 +20,7 @@ router.get("/all-staff", (request, response) => {
   });
 });
 
-//POST-Adds a new staff
+// add a staff
 router.post("/add", (request, response) => {
   const { firstName, lastName, email, password } = request.body;
   const sql = `INSERT INTO ${STAFF_TABLE} (firstName, lastName, email, password) VALUES (?, ?, ?, ?)`;
@@ -33,7 +33,7 @@ router.post("/add", (request, response) => {
   });
 });
 
-//PUT-Updates staff details by staffId
+// Update a staff
 router.put("/update/:id", (request, response) => {
   const { id } = request.params;
   const { firstName, lastName, email, password } = request.body;
@@ -45,7 +45,7 @@ router.put("/update/:id", (request, response) => {
   });
 });
 
-//DELETE-Removes staff by Id
+//  delete a staff
 router.delete("/delete/:id", (request, response) => {
   const { id } = request.params;
   const sql = `DELETE FROM ${STAFF_TABLE} WHERE staff_id = ?`;
