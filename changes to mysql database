@@ -88,4 +88,20 @@ VALUES
 ALTER TABLE students ADD batch_id INT;
 
 UPDATE students SET batch_id = 1 WHERE student_id = 1;
-UPDATE students SET batch_id = 2 WHERE student_id
+
+UPDATE students SET batch_id = 2 WHERE student_id = 2;
+
+----------------------------------------------------------------
+ALTER TABLE options
+     DROP FOREIGN KEY options_ibfk_1;
+
+
+mysql> ALTER TABLE options
+     ADD CONSTRAINT options_ibfk_1
+     FOREIGN KEY (question_id)
+     REFERENCES questions(question_id)
+     ON DELETE CASCADE;
+
+
+
+

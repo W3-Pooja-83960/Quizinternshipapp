@@ -1,43 +1,76 @@
-const express = require('express')
-const db = require('../db')
-const utils = require('../utils')
+const express = require("express");
+const { successResponse, errorResponse } = require("../utils/apiResponse");
+const pool = require("../config/db");
+const { STUDENTS_GROUP_TABLE } = require("../config");
 
-const router = express.Router()
+const router = express.Router();
 
-router.get('/',(request,response) =>{
-    const statement = `select * from student_group`
-    db.pool.query(statement,(error,result) =>{
-        response.send(utils.createResult(error,result))
-    })
-})
+// Get all student groups
+router.get("/all", (request, response) => {
+  const sql = `SELECT * FROM ${STUDENTS_GROUP_TABLE}`;
+  pool.query(sql, (error, results) => {
+    if (error) return response.send(errorResponse(error));
+    if (results.length === 0) return response.send(successResponse("No student groups found."));
+    return response.send(successResponse(results));
+  });
+});
 
-router.post('/',(request,response) =>{
-    const {studentId, moduleId} = request.body
-    const statement = `insert into student_group (studentId, moduleId) values (?,?)`
-    db.pool.execute(statement,[studentId, moduleId],(error,result) =>{
-        response.send(utils.createResult(error,result))
-    })
-
-})
-
-router.put('/:id',(request,response) =>{
-    const {id} = request.params
-    const {studentId, moduleId} = request.body
-    const statement = `update student_group set studentId=?, moduleId=? where id=?`
-    db.pool.execute(statement,[studentId, moduleId,id],(error,result) =>{
-        response.send(utils.createResult(error,result))
-    })
-})
-
- router.delete('/:id',(request,response) =>{
-        const {id} = request.params
-        const statement = `update student_group set is_active = 0 where id=?`
-        db.pool.execute(statement,[id] , (error,result) =>{
-            response.send(utils.createResult(error,result))
-        })
-    
-})
-
-module.exports = router
+// Get a student group by ID
+router.get("/:group_id", (request, response) => {
+  const { group_id } = request.params;
+  const sql = `SELECT * FROM ${STUDENTS_GROUP_TABLE} WHERE group_id = ?`;
+  pool.execute(sql, [group_id], (error, results) => {
+    if (error) return response.send(errorResponse(error));
+    if (results.length === 0) return response.send(successResponse("No student group found with ID: " + group_id));
+    return response.send(successResponse(results[0]));
+  });
+});
 
 
+// Add a new student group
+router.post("/add", (request, response) => {
+  const { student_id, module_id } = request.body;
+  const sql = `INSERT INTO ${STUDENTS_GROUP_TABLE} (student_id, module_id) VALUES (?, ?)`;
+  pool.execute(sql, [student_id, module_id], (error, result) => {
+    if (error) return response.send(errorResponse(error));
+    return response.send(successResponse({
+      message: "Student group created successfully",
+      groupId: result.insertId
+    }));
+  });
+});
+
+// Update a student group
+router.put("/update/:group_id", (request, response) => {
+  const { group_id } = request.params;
+  const { student_id,module_id } = request.body;
+
+  const sql = `UPDATE ${STUDENTS_GROUP_TABLE} 
+               SET student_id = ?, module_id = ? 
+               WHERE group_id = ?`;
+
+  pool.execute(sql, [student_id, module_id, group_id], (error, result) => {
+    if (error) return response.send(errorResponse(error));
+
+    if (result.affectedRows === 0)
+      return response.send(successResponse("No student group found with group ID: " + group_id));
+
+    return response.send(successResponse("Student group updated successfully"));
+  });
+});
+
+
+
+
+// delete a student group
+router.delete("/delete/:group_id", (request, response) => {
+  const { group_id } = request.params;
+  const sql = `DELETE FROM ${STUDENTS_GROUP_TABLE} WHERE group_id = ?`;
+  pool.execute(sql, [group_id], (error, result) => {
+    if (error) return response.send(errorResponse(error));
+    if (result.affectedRows === 0) return response.send(successResponse("No student group found with ID: " + group_id));
+    return response.send(successResponse("Student group deleted successfully"));
+  });
+});
+
+module.exports = router;

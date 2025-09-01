@@ -4,10 +4,86 @@ const { successResponse, errorResponse } = require("../utils/apiResponse");
 const {STUDENTS_TABLE, BATCH_TABLE, BATCH_COURSE_TABLE } = require("../config");
 const pool = require("../config/db");
 
+
 const router = express.Router();
 /*
  * GET http://localhost:4444/student_batch/assign-student-to-batch
  * Fetch all student-batch assignments (shubhsbhykr07)
+
+const router = express.Router();
+
+
+// Get all staff
+router.get("/all-staff", (request, response) => {
+  const sql = `SELECT * FROM ${STAFF_TABLE}`;
+  pool.query(sql, (error, results) => {
+    if (error) return response.send(errorResponse(error));
+    if (results.length === 0) return response.send(successResponse("No staff found."));
+    return response.send(successResponse(results));
+  });
+});
+
+// add a staff
+router.post("/add", (request, response) => {
+  const { firstName, lastName, email, password } = request.body;
+  const sql = `INSERT INTO ${STAFF_TABLE} (firstName, lastName, email, password) VALUES (?, ?, ?, ?)`;
+  pool.execute(sql, [firstName, lastName, email, password], (error, result) => {
+    if (error) return response.send(errorResponse(error));
+    return response.send(successResponse({
+      message: "Staff created successfully",
+      staffId: result.insertId
+    }));
+  });
+});
+
+// Update a staff
+router.put("/update/:id", (request, response) => {
+  const { id } = request.params;
+  const { firstName, lastName, email, password } = request.body;
+  const sql = `UPDATE ${STAFF_TABLE} SET firstName = ?, lastName = ?, email = ?, password = ? WHERE staff_id = ?`;
+  pool.execute(sql, [firstName, lastName, email, password, id], (error, result) => {
+    if (error) return response.send(errorResponse(error));
+    if (result.affectedRows === 0) return response.send(successResponse("No staff found with ID: " + id));
+    return response.send(successResponse("Staff updated successfully"));
+  });
+});
+
+//  delete a staff
+router.delete("/delete/:id", (request, response) => {
+  const { id } = request.params;
+  const sql = `DELETE FROM ${STAFF_TABLE} WHERE staff_id = ?`;
+  pool.execute(sql, [id], (error, result) => {
+    if (error) return response.send(errorResponse(error));
+    if (result.affectedRows === 0) return response.send(successResponse("No staff found with ID: " + id));
+    return response.send(successResponse("Staff deleted successfully"));
+  });
+});
+
+// Get- all student (shubhsbhykr07) 
+//Get all registered students
+
+router.get("/all-students", (request, response) => {
+  const sql = `SELECT * FROM ${STUDENTS_TABLE}`;
+
+  pool.query(sql, (error, results) => {
+    if (error) {
+      return response.send(errorResponse(error));
+    }
+
+    if (results.length === 0) {
+      return response.send(successResponse("No students found."));
+    }
+
+    return response.send(successResponse(results));
+  });
+});
+
+
+
+//GET- Get all registered students which present in a batch
+ /* GET url: http://localhost:4444/student_batch/assign-student-to-batch
+ * Fetch all student-batch table (shubhsbhykr07)
+
  */
 router.get("/all-student-batches", (request, response) => {
 
@@ -26,9 +102,9 @@ router.get("/all-student-batches", (request, response) => {
   });
 });
 
-/**  api no -> 05 (shubhsbhykr07)
- * POST http://localhost:4444/student_batch/assign-student-to-batch
- * Assign a student to a batch
+/** POST Add Student to a Batch(shubhsbhykr07)
+ * url: http://localhost:4444/student_batch/assign-student-to-batch
+ * Assign-a-student-to-a-batch 
  * {
   "student_id": 3,
   "batch_id": 4
@@ -60,37 +136,8 @@ router.post("/assign-student-to-batch", (request, response) => {
 });
 
 
-
-  // api no 8:- (w2-bhushan-)
-// get assign-student-with-batch-batchid (Get all students which are present in a batch)
-
-router.get("/all-students-with-batch/:batchId", (req, res) => {
-  const { batchId } = req.params;
-
-  const sql = `
-    SELECT s.student_id, s.firstName, s.lastName, s.email, s.prnNo, b.batch_name
-    FROM ${STUDENTS_TABLE} s
-    INNER JOIN ${BATCH_COURSE_TABLE} bc ON s.course_id = bc.course_id
-    INNER JOIN ${BATCH_TABLE} b ON bc.batch_id = b.batch_id
-    WHERE b.batch_id = ?
-  `;
-
-  pool.execute(sql, [batchId], (error, results) => {
-    if (error) {
-      return res.send(errorResponse(error));
-    }
-
-    if (results.length === 0) {
-      return res.send(successResponse(`No students found in batch ID: ${batchId}`));
-    }
-
-    return res.send(successResponse(results));
-  });
-});
-
-
-
-  // api no:- (w3-pooja-83960)
+//POST- Adds students to a batch
+// api no:- (w3-pooja-83960)
 // /assign-students-to-batch (multiple student added in batch)
 
 router.post("/assign-students-to-batch", (req, res) => {
