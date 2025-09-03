@@ -311,7 +311,32 @@ router.post("/assign-students-to-course", (req, res) => {
   });
 });
 
-//GET- Get all students which are present in a course
+//GET- Get all students which are present in a course(bhushan)
+router.get("/all-students-with-course/:course_id", (req, res) => {
+  const { course_id } = req.params;
+
+  const sql = `
+    SELECT s.student_id, s.firstName, s.lastName, s.email, s.prnNo,
+           c.course_id, c.course_name
+    FROM ${STUDENTS_TABLE} s
+    JOIN ${COURSE_TABLE} c ON s.course_id = c.course_id
+    WHERE c.course_id = ?;
+  `;
+
+  pool.query(sql, [course_id], (err, results) => {
+    if (err) {
+      console.error("Database error:", err);
+      return res.status(500).json(errorResponse(err));
+    }
+
+    if (results.length === 0) {
+      return res.json(successResponse("No students found in this course."));
+    }
+
+    return res.json(successResponse(results));
+  });
+});
+
 
 //PUT- Updates student record batch and course
 router.put("/update-student-record/:student_id", (req, res) => {
@@ -340,4 +365,3 @@ router.put("/update-student-record/:student_id", (req, res) => {
 
 
 module.exports = router;
-
