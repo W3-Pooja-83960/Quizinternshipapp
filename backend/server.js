@@ -1,5 +1,7 @@
 const express = require("express");
+
 const app = express();
+
 const moduleRoutes = require("./routes/moduleRoutes");
 const batchcourseRoutes = require("./routes/batchcourseRoutes");
 const optionsRoutes = require("./routes/optionsRoutes");
@@ -21,13 +23,35 @@ const studentAnswer_Routes = require("./routes/studentAnswer_Routes");
 
 
 
+
+
+
+const { PORT } = require("./config/index");
+
+
+const routeNotFound = require("./middlewares/routeNotFound");
+const batchRoutes = require("./routes/batch");
+const courseRoutes = require("./routes/course");
+const questionRoutes = require("./routes/questions");
+
 const { PORT } = require("./config");
 const routeNotFound = require("./middlewares/routeNotFound");
+
 
 // middlewares
 app.use(express.json());
 
 // routes
+
+
+app.use("/batch_course", batchcourseRoutes);
+app.use("/questions", questionRoutes);
+app.use("/module", moduleRoutes);
+
+app.use("/batch",batchRoutes)
+app.use("/course",courseRoutes);
+
+
 app.use("/module", moduleRoutes);
 app.use("/batch_course", batchcourseRoutes);
 app.use("/options", optionsRoutes);

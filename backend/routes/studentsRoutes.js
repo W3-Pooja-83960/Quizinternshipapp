@@ -1,6 +1,6 @@
 const express = require("express");
 const { successResponse, errorResponse } = require("../utils/apiResponse");
-const { STUDENTS_TABLE } = require("../config");
+const { STUDENTS_TABLE } = require("../config/index");
 const pool = require("../config");
 //const { app } = require(".../server");
 
