@@ -6,7 +6,7 @@ ON UPDATE CASCADE;
 
 truncate table studentAnswer;
 
-> DELETE FROM StudentQuiz;
+mysql>DELETE FROM StudentQuiz;
 
 
 mysql> DELETE FROM options;

@@ -1,8 +1,11 @@
 
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+
 import "../css/Navbar.css";
 const Navbar = () => {
+
+const NavBar = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -18,10 +21,12 @@ const Navbar = () => {
       </div>
 
       <nav className="navbar-links">
-        <Link to="/staff">Staff</Link>
-        <Link to="/students">Students</Link>
+        <Link to="/batche">Batches</Link>
         <Link to="/courses">Courses</Link>
+        <Link to="/staff">Staff</Link>
+        <Link to="/students">Students</Link>       
         <Link to="/quizzes">Quizzes</Link>
+        <Link to="/questions">Questions</Link>
       
       </nav>
 
@@ -33,5 +38,7 @@ const Navbar = () => {
     </header>
   );
 };
+}
 
 export default Navbar;
+
