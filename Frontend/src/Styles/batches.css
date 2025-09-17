@@ -1,0 +1,141 @@
+.table-container {
+  padding: 2rem;
+  font-family: 'Poppins', sans-serif;
+  overflow-x: auto;  
+  max-width: 1200px;    
+  margin: 0 auto;       
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+table { 
+  border-collapse: collapse;
+  table-layout: auto;   
+  word-wrap: break-word; 
+  width: 80%;               
+  max-width: 100%;
+  margin: 0 auto; 
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 0.75rem;
+  text-align: left;
+  white-space: nowrap;  
+}
+
+th {
+  background-color: #5346a0;
+  color: white;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* ===== Form Container ===== */
+.batch-form {
+  display: flex;
+  flex-wrap: nowrap;           /* keep all inputs and button in one line */
+  gap: 1rem;                   /* space between fields */
+  width: 80%;                  /* same as table width */
+  max-width: 1200px;           /* match table container */
+  margin: 0 auto 1.5rem;       /* center horizontally */
+}
+
+/* Form Inputs */
+.batch-form input {
+  flex: 1;                     /* all inputs grow equally */
+  padding: 0.6rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+/* Add/Update Button */
+.batch-form button {
+  flex: 1;                     /* take same width as one input */
+  background-color: #5346a0;
+  color: white;
+  border: none;
+  border-radius: 12px;         /* curved boundary */
+  padding: 0.6rem 1rem;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.batch-form button:hover {
+  background-color: #403380;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== Table Action Buttons Wrapper ===== */
+
+td .action-buttons {
+  display: flex;
+  gap: 12px;               
+  justify-content: center;
+}
+
+/* Buttons styled like Add button */
+td .action-buttons .btn {
+  padding: 0.4rem 0.8rem; 
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Edit button - blue */
+td .action-buttons .btn.edit {
+  background-color: #c0ddf0;
+}
+
+td .action-buttons .btn.edit:hover {
+  background-color: #2196f3;
+}
+
+/* Delete button - red */
+td .action-buttons .btn.delete {
+  background-color: #eca6a6;
+}
+
+td .action-buttons .btn.delete:hover {
+  background-color: #d32f2f;
+}
+
+/* Make Edit/Delete buttons text white & consistent */
+td .action-buttons .btn.edit {
+  background-color: #5346a0;   /* same base as Add */
+  color: white;
+}
+
+td .action-buttons .btn.edit:hover {
+  background-color: #403380;   /* darker hover */
+}
+
+td .action-buttons .btn.delete {
+  background-color: #e57373;   /* red delete */
+  color: white;
+}
+
+td .action-buttons .btn.delete:hover {
+  background-color: #d32f2f;
+}
+
+/* Keep them smaller than Add/Update */
+td .action-buttons .btn {
+  padding: 0.3rem 0.7rem;
+  border-radius: 12px;   /* match Add button */
+  font-size: 13px;
+  min-width: 70px;       /* consistent size */
+  text-align: center;
+}
