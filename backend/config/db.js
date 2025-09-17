@@ -6,7 +6,6 @@ const pool = mysql.createPool({
   user: USERNAME,
   password: PASSWORD,
   database: DATABASE,
-  port: DB_PORT,   // ✅ use DB port here
   waitForConnections: true,
   connectionLimit: 10,
   maxIdle: 10,
@@ -14,6 +13,7 @@ const pool = mysql.createPool({
   queueLimit: 0,
   enableKeepAlive: true,
   keepAliveInitialDelay: 0,
+  dateStrings: true
 });
 
 module.exports = pool;
