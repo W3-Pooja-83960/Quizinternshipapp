@@ -1,86 +1,81 @@
+
 const express = require("express");
-
 const app = express();
-
-const moduleRoutes = require("./routes/moduleRoutes");
-const batchcourseRoutes = require("./routes/batchcourseRoutes");
-const optionsRoutes = require("./routes/optionsRoutes");
-const course_moduleRoutes = require("./routes/course_moduleRoutes");
-const admin_Routes = require("./routes/admin_Routes");
-const batch_Routes = require("./routes/batch_Routes");
-const course_Routes = require("./routes/course_Routes");
-const studentquiz_Routes = require("./routes/studentquiz_Routes");
-//const studentAnswer_Routes = require("./routes/studentAnswer_Routes");
-const quiz_Routes = require("./routes/quiz_Routes");
-const staff_Routes = require("./routes/staff_Routes");
-const studentGroup_Routes = require("./routes/studentGroup_routes");
-const students_Routes = require("./routes/students_Routes");
-const studentAnswer_Routes = require("./routes/studentAnswer_Routes");
-
-
-
-
-
-
-
-
-
-
-const { PORT } = require("./config/index");
-
-
+const cors = require("cors");
+const { PORT } = require("./config");
 const routeNotFound = require("./middlewares/routeNotFound");
 const batchRoutes = require("./routes/batch");
 const courseRoutes = require("./routes/course");
-const questionRoutes = require("./routes/questions");
 
-const { PORT } = require("./config");
-const routeNotFound = require("./middlewares/routeNotFound");
+const studentsQuizRoutes = require("./routes/studentQuizRoutes");
+const studentAnswersRoutes = require("./routes/studentAnswerRoutes");
+const admin_Routes = require("./routes/admin_Routes");
+const assignedQuizRoute = require("./routes/assignedQuizRoute");
+
+const moduleRoutes = require("./routes/moduleRoutes");
+const batch_courseRoutes = require("./routes/batch_courseRoutes");
+const optionsRoutes = require("./routes/optionsRoutes");
+
+const studentsRoutes = require("./routes/studentsRoutes");
+const course_moduleRoutes = require("./routes/course_moduleRoutes");
+
+const studentsGroupRoutes = require("./routes/studentGroup");
+const staffRoutes = require("./routes/staff");
+
+const quizRoutes = require("./routes/quiz");
+
+const questionsRoutes = require("./routes/questions");
+
+const userRoutes = require("./routes/userRoutes");
 
 
 // middlewares
 app.use(express.json());
+app.use(cors());
+
+// Dummy GET API
+app.get('/test', (req, res) => {
+  console.log('Request received!');  
+  res.send({ status: 'ok' });
+});
+
+//Admin routes
+app.use("/admin_routes",admin_Routes);
 
 // routes
-
-
-app.use("/batch_course", batchcourseRoutes);
-app.use("/questions", questionRoutes);
-app.use("/module", moduleRoutes);
-
 app.use("/batch",batchRoutes)
 app.use("/course",courseRoutes);
+app.use("/student-quiz",studentsQuizRoutes);
+app.use("/student-answers", studentAnswersRoutes);
+app.use("/assigned_quiz",assignedQuizRoute);
 
+app.use("/module",moduleRoutes)
+app.use("/batch_course",batch_courseRoutes);
+app.use("/options",optionsRoutes)
 
-app.use("/module", moduleRoutes);
-app.use("/batch_course", batchcourseRoutes);
-app.use("/options", optionsRoutes);
-app.use("/course_module", course_moduleRoutes);
-app.use("/student_batch",admin_Routes);
-app.use("/batch",batch_Routes);
-app.use("/course",course_Routes);
-app.use("/studentquiz",studentquiz_Routes);
-//app.use("/studentAnswer",studentAnswer_Routes);
-app.use("/quiz",quiz_Routes);
-app.use("/staff",staff_Routes);
-app.use("/studentGroup",studentGroup_Routes);
-app.use("/students", students_Routes);
-app.use("/studentsAnswer", studentAnswer_Routes);
-app.use("/admin_Routes", admin_Routes);
+app.use("/students",studentsRoutes);
+app.use("/course_module",course_moduleRoutes);
+app.use("/students_group",studentsGroupRoutes);
 
+app.use("/staff",staffRoutes);
+app.use("/quiz", quizRoutes);
+app.use("/questions",questionsRoutes);
 
+app.use("/user",userRoutes);
 
-
-
-
-
-
-
-//app.use("/staff",staff_Routes);
 
 // route not found
-app.use(routeNotFound);
+app.use("/routeNotFound",routeNotFound);
+
+
+// Start server
 
 app.listen(PORT, () => {
-  console.log(`Server Started at http://localhost:${PORT}`);
+  console.log(`Server started at http://localhost:${PORT}`);
 });
+
+
+
+
+
+
