@@ -1,0 +1,342 @@
+create database quiz;
+
+use quiz;
+
+CREATE TABLE course (
+  course_id INT PRIMARY KEY AUTO_INCREMENT,
+  course_name VARCHAR(50)
+);
+
+CREATE TABLE batch (
+  batch_id INT PRIMARY KEY AUTO_INCREMENT,
+  batch_name VARCHAR(30),
+  start_date DATE,
+  end_date DATE
+);
+
+CREATE TABLE module (
+  module_id INT PRIMARY KEY AUTO_INCREMENT,
+  module_name VARCHAR(50)
+);
+
+
+
+CREATE TABLE batch_course (
+  batch_id INT,
+  course_id INT,
+  FOREIGN KEY (batch_id) REFERENCES batch(batch_id),
+  FOREIGN KEY (course_id) REFERENCES course(course_id),
+  PRIMARY KEY (batch_id, course_id)
+);
+
+
+
+CREATE TABLE course_module (
+    course_id INT,
+    module_id INT,
+    FOREIGN KEY (course_id) REFERENCES course(course_id),
+    FOREIGN KEY (module_id) REFERENCES module(module_id),
+    PRIMARY KEY (course_id, module_id)
+);
+
+
+CREATE TABLE students (
+    student_id INT PRIMARY KEY AUTO_INCREMENT,
+    firstName VARCHAR(30),
+    lastName VARCHAR(30),
+    email VARCHAR(50),
+    password VARCHAR(100),
+    prnNo INT,
+    course_id INT,
+    createdTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (course_id) REFERENCES course(course_id)
+);
+
+CREATE TABLE student_group (
+    group_id INT PRIMARY KEY AUTO_INCREMENT,
+    student_id INT,
+    module_id INT,
+    FOREIGN KEY (student_id) REFERENCES students(student_id),
+    FOREIGN KEY (module_id) REFERENCES module(module_id)
+);
+
+
+CREATE TABLE staff (
+    staff_id INT PRIMARY KEY AUTO_INCREMENT,
+    firstName VARCHAR(30),
+    lastName VARCHAR(30),
+    email VARCHAR(50),
+    password VARCHAR(100),
+    createdTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE quiz (
+    quiz_id INT PRIMARY KEY AUTO_INCREMENT,
+    quiz_title VARCHAR(50),
+    duration INT,
+    marks INT,
+    module_id INT,
+    staff_id INT,
+    createdTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (module_id) REFERENCES module(module_id),
+    FOREIGN KEY (staff_id) REFERENCES staff(staff_id)
+);
+
+CREATE TABLE questions (
+    question_id INT PRIMARY KEY AUTO_INCREMENT,
+    question_text TEXT,
+    quiz_id INT,
+    createdTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (quiz_id) REFERENCES quiz(quiz_id)
+);
+
+CREATE TABLE options (
+    option_id INT PRIMARY KEY AUTO_INCREMENT,
+    question_id INT,
+    option_text VARCHAR(100),
+    is_correct BOOLEAN,
+    FOREIGN KEY (question_id) REFERENCES questions(question_id)
+);
+
+CREATE TABLE StudentQuiz (
+    attempt_id INT PRIMARY KEY AUTO_INCREMENT,
+    student_id INT,
+    quiz_id INT,
+    score INT,
+    FOREIGN KEY (student_id) REFERENCES students(student_id),
+    FOREIGN KEY (quiz_id) REFERENCES quiz(quiz_id)
+);
+
+CREATE TABLE studentAnswer (
+    studentAnswer_id INT PRIMARY KEY AUTO_INCREMENT,
+    attempt_id INT,
+    questions_id INT,
+    is_correct BOOLEAN,
+    FOREIGN KEY (attempt_id) REFERENCES StudentQuiz(attempt_id),
+    FOREIGN KEY (questions_id) REFERENCES questions(question_id)
+);
+
+----------------------------------------------------------------------------------------------
+quiz data to insert
+
+INSERT INTO course (course_id, course_name) VALUES
+(1001, 'DMC'),
+(2001, 'DAC'),
+(3001, 'DBDA'),
+(4001, 'DITISS'),
+(5001, 'DESD');
+
+INSERT INTO batch (batch_name, start_date, end_date) VALUES
+('Mar 23', '2023-03-01', '2023-08-31'),
+('Sep 23', '2023-09-01', '2024-02-29'),
+('Mar 24', '2024-03-01', '2024-08-31'),
+('Sep 24', '2024-09-01', '2025-02-28'),
+('Mar 25', '2025-03-01', '2025-08-31'),
+('Sep 25', '2025-09-01', '2026-02-28');
+
+INSERT INTO module (module_id, module_name) VALUES
+(101, 'Java'),
+(102, 'MySQL'),
+(103, 'Android'),
+(104, 'Hybrid'),
+(105, 'iOS'),
+(106, 'OS'),
+(107, 'DSA'),
+(108, 'Machine Learning'),
+(109, 'Python'),
+(110, 'Cloud'),
+(111, 'WebJava'),
+(112, 'Networking'),
+(113, 'C'),
+(114, 'Microprocessor'),
+(115, 'React');
+
+INSERT INTO course_module (course_id, module_id) VALUES
+(1001, 101), (1001, 102), (1001, 103), (1001, 104), (1001, 105), (1001, 106), (1001, 107),
+(2001, 101), (2001, 107), (2001, 102), (2001, 111), (2001, 104),
+(3001, 101), (3001, 102), (3001, 108), (3001, 109), (3001, 110),
+(4001, 112), (4001, 109),
+(5001, 113), (5001, 114);
+
+INSERT INTO batch_course (batch_id, course_id) VALUES
+(1, 1001), (1, 2001), (1, 3001), (1, 4001), (1, 5001),
+(2, 1001), (2, 2001), (2, 3001), (2, 4001), (2, 5001),
+(3, 1001), (3, 2001), (3, 3001), (3, 4001), (3, 5001),
+(4, 1001), (4, 2001), (4, 3001), (4, 4001), (4, 5001),
+(5, 1001), (5, 2001), (5, 3001), (5, 4001), (5, 5001),
+(6, 1001), (6, 2001), (6, 3001), (6, 4001), (6, 5001);
+
+
+INSERT INTO course_module (course_id, module_id, course_name, module_name) VALUES
+(1001, 101, 'DMC', 'Java'),
+(1001, 102, 'DMC', 'MySQL'),
+(1001, 103, 'DMC', 'Android'),
+(1001, 104, 'DMC', 'Hybrid'),
+(1001, 105, 'DMC', 'iOS'),
+(1001, 106, 'DMC', 'OS'),
+(1001, 107, 'DMC', 'DSA'),
+(1001, 115, 'DMC', React), 
+(2001, 101, 'DAC', 'Java'),
+(2001, 102, 'DAC', 'MySQL'),
+(2001, 104, 'DAC', 'Hybrid'),
+(2001, 107, 'DAC', 'DSA'),
+(2001, 111, 'DAC', 'WebJava'),
+(3001, 101, 'DBDA', 'Java'),
+(3001, 102, 'DBDA', 'MySQL'),
+(3001, 108, 'DBDA', 'Machine Learning'),
+(3001, 109, 'DBDA', 'Python'),
+(3001, 110, 'DBDA', 'Cloud'),
+(4001, 109, 'DITISS', 'Python'),
+(4001, 112, 'DITISS', 'Networking'),
+(4001, 114, 'DITISS', 'Microprocessor'),
+(5001, 113, 'DESD', 'C');
+
+INSERT INTO students 
+(student_id, firstName, lastName, email, password, prnNo, course_id, batch_id, group_id) VALUES
+(1, 'Aarohi', 'Sharma', 'aarohi.sharma@example.com', 'pass123', '12345678', 1001, 1, 'w1'),
+(2, 'Rohan', 'Patel', 'rohan.patel@example.com', 'abc456', '87654321', 1001, 1, 'w1'),
+(3, 'Priya', 'Neharkar', 'pri@example.com', 'test123', '23451256', 1001, 1, 'w1'),
+(4, 'Neha', 'Kumar', 'neha.kumar@example.com', 'NehaPass123', '34567891', 1001, 1, 'w2'),
+(5, 'Sneha', 'Joshi', 'sneha.joshi@example.com', 'SnehaPass123', '56789123', 1001, 1, 'w2'),
+(6, 'Arjun', 'Deshmukh', 'arjun.deshmukh@example.com', 'ArjunPass123', '45678912', 1001, 1, 'w3'),
+(7, 'Rahul', 'Kulkarni', 'rahul.kulkarni@example.com', 'RahulPass123', '67891234', 1001, 1, 'w4');
+
+
+INSERT INTO quiz 
+(quiz_id, quiz_title, duration, marks, module_id, staff_id, is_active, course_id, group_id) VALUES
+(1, 'Java Quiz', 20, 20, 101, 2, 1, 1001, NULL),
+(2, 'SQL Quiz', 20, 20, 102, 3, 0, 1001, NULL),
+(3, 'Python Quiz', 20, 20, 109, 1, 0, 3001, NULL);
+
+INSERT INTO staff 
+(staff_id, firstName, lastName, email, password, role) VALUES
+(1, 'Admin', 'Admin', 'admin@gmail.com', 'admin123', 'admin'),
+(2, 'Anita', 'Desai', 'anita.desai@gmail.com', 'anita123', 'coordinator'),
+(3, 'Karan', 'Verma', 'karan.verma@test.com', 'karan123', 'mentor');
+
+INSERT INTO student_group (group_id, student_id, course_id) VALUES
+('w1', 1, 101),
+('w1', 2, 101),
+('w1', 3, 102);
+
+
+INSERT INTO questions (question_id, question_text, quiz_id, module_id) VALUES
+(1, 'What is the size of int in Java?', 1, 101),
+(2, 'Which keyword is used to inherit a class in Java?', 1, 101),
+(3, 'Which keyword is used to prevent inheritance in Java?', 1, 101),
+(4, 'Which command is used to create a database in MySQL?', 2, 102),
+(6, 'How do you retrieve all records from a table in MySQL?', 2, 102);
+
+INSERT INTO options (question_id, option_text, is_correct, module_id) VALUES
+(1, '16 bits', 0, 101),
+(1, '32 bits', 1, 101),
+(1, '64 bits', 0, 101),
+(1, '8 bits', 0, 101),
+
+(2, 'this', 0, 101),
+(2, 'extends', 1, 101),
+(2, 'super', 0, 101),
+(2, 'inherits', 0, 101),
+
+(3, 'final', 1, 101), 
+(3, 'static', 0, 101),
+(3, 'private', 0, 101),
+(3, 'sealed', 0, 101),
+
+(4, 'CREATE DB dbname;', 0, 102),
+(4, 'CREATE DATABASE dbname;', 1, 102), 
+(4, 'MAKE DATABASE dbname;', 0, 102),
+(4, 'NEW DATABASE dbname;', 0, 102),
+
+(6, 'SELECT ALL FROM table;', 0, 102),
+(6, 'SELECT * FROM table;', 1, 102), 
+(6, 'GET * FROM table;', 0, 102),
+(6, 'FETCH ALL table;', 0, 102);
+
+--------------------------------------------------------------------------------------------------------------------
+ALTER TABLE module
+ADD COLUMN course_id INT;
+
+ALTER TABLE student_group
+ADD COLUMN course_id INT;
+
+ALTER TABLE batch_course DROP FOREIGN KEY batch_course_ibfk_1;
+
+drop table student_batch;
+
+ALTER TABLE batch
+MODIFY batch_id VARCHAR(10) ;
+
+ALTER TABLE course_module
+ADD COLUMN course_name VARCHAR(20),
+ADD COLUMN module_name VARCHAR(20);
+
+ALTER TABLE questions
+ADD COLUMN module_id int;
+
+ALTER TABLE options
+ADD COLUMN module_id int;
+
+ALTER TABLE quiz
+ADD COLUMN course_id int;
+
+ALTER TABLE staff
+ADD COLUMN role VARCHAR(50);
+
+
+ALTER TABLE questions
+DROP COLUMN createdTimestamp;
+
+ALTER TABLE staff
+DROP COLUMN createdTimestamp;
+
+alter table StudentQuiz add column group_id varchar(10);
+
+DELETE FROM staff;
+
+alter table students drop column createdTimestamp;
+
+ALTER TABLE staff
+MODIFY COLUMN role ENUM('admin', 'coordinator', 'mentor') DEFAULT 'mentor';
+
+ALTER TABLE staff ADD CONSTRAINT unique_email UNIQUE (email);
+
+ALTER TABLE students ADD CONSTRAINT unique_email UNIQUE (email);
+
+
+ALTER TABLE student_group 
+MODIFY group_id INT;
+
+ALTER TABLE student_group 
+MODIFY group_id VARCHAR(20);
+
+
+ALTER TABLE students ADD batch_id INT;
+
+ALTER TABLE options
+     DROP FOREIGN KEY options_ibfk_1;
+	
+ALTER TABLE options
+ADD CONSTRAINT options_ibfk_1
+FOREIGN KEY (question_id)
+REFERENCES questions(question_id)
+ON DELETE CASCADE;
+
+CREATE TABLE quiz_questions (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  quiz_id INT NOT NULL,
+  question_id INT NOT NULL,
+  FOREIGN KEY (quiz_id) REFERENCES quiz(quiz_id) ON DELETE CASCADE,
+  FOREIGN KEY (question_id) REFERENCES questions(question_id) ON DELETE CASCADE
+);
+
+
+ALTER TABLE quiz ADD COLUMN group_id VARCHAR(10);
+
+
+
+
+
+
+
