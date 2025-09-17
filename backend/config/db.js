@@ -1,5 +1,5 @@
 const mysql = require("mysql2");
-const { HOST, USERNAME, PASSWORD, DATABASE, DB_PORT } = require("./index");
+const { HOST, USERNAME, PASSWORD, DATABASE} = require(".");
 
 const pool = mysql.createPool({
   host: HOST,
