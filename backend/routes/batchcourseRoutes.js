@@ -1,6 +1,6 @@
 const express = require("express");
 const { successResponse, errorResponse } = require("../utils/apiResponse");
-const { BATCH_COURSE_TABLE } = require("../config");
+const { BATCH_COURSE_TABLE } = require("../config/index");
 const pool = require("../config/db");
 const router = express.Router();
 

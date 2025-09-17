@@ -1,0 +1,18 @@
+.dashboard-container {
+  min-height: 100vh;
+  background: #f4f6f8;
+}
+
+.dashboard-content {
+  padding: 30px;
+  text-align: center;
+}
+
+.dashboard-content h1 {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.dashboard-content p {
+  color: #555;
+}

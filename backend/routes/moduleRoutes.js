@@ -1,7 +1,7 @@
 const express = require("express");
 const { successResponse, errorResponse } = require("../utils/apiResponse");
-//const pool = require("../config/db");
-const { MODULE_TABLE } = require("../config");
+
+const { MODULE_TABLE } = require("../config/index");
 const pool = require("../config/db");
 const router = express.Router();
 
