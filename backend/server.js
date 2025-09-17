@@ -1,4 +1,3 @@
-
 const express = require("express");
 const app = express();
 const cors = require("cors");
@@ -69,7 +68,6 @@ app.use("/routeNotFound",routeNotFound);
 
 
 // Start server
-
 app.listen(PORT, () => {
   console.log(`Server started at http://localhost:${PORT}`);
 });
