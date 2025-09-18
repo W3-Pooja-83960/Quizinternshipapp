@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const { PORT } = require("./config");
+
 const routeNotFound = require("./middlewares/routeNotFound");
 const batchRoutes = require("./routes/batch");
 const courseRoutes = require("./routes/course");
@@ -26,18 +27,22 @@ const quizRoutes = require("./routes/quiz");
 
 const questionsRoutes = require("./routes/questions");
 
-const userRoutes = require("./routes/userRoutes");
+const userRoutes = require("./routes/user_Routes");
 
 
 // middlewares
 app.use(express.json());
 app.use(cors());
 
+
+
 // Dummy GET API
 app.get('/test', (req, res) => {
   console.log('Request received!');  
   res.send({ status: 'ok' });
 });
+
+
 
 //Admin routes
 app.use("/admin_routes",admin_Routes);
@@ -62,6 +67,8 @@ app.use("/quiz", quizRoutes);
 app.use("/questions",questionsRoutes);
 
 app.use("/user",userRoutes);
+
+
 
 
 // route not found
