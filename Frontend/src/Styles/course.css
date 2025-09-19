@@ -1,0 +1,110 @@
+.table-container {
+  padding: 2rem;
+  font-family: 'Poppins', sans-serif;
+  overflow-x: auto;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+table {
+  border-collapse: collapse;
+  table-layout: auto;
+  word-wrap: break-word;
+  width: 80%;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 0.75rem;
+  text-align: left;
+  white-space: nowrap;
+}
+
+th {
+  background-color: #5346a0;
+  color: white;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* ===== Form Container ===== */
+.course-form {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 1rem;
+  width: 80%;
+  max-width: 1200px;
+  margin: 0 auto 1.5rem;
+}
+
+/* Form Inputs */
+.course-form input {
+  flex: 1;
+  padding: 0.6rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+/* Add/Update Button */
+.course-form button {
+  flex: 1;
+  background-color: #5346a0;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 0.6rem 1rem;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.course-form button:hover {
+  background-color: #403380;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== Table Action Buttons ===== */
+td button {
+  padding: 0.3rem 0.7rem;
+  border-radius: 12px;
+  font-size: 13px;
+  min-width: 70px;
+  text-align: center;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-right: 8px;
+}
+
+/* Edit Button */
+td button:first-of-type {
+  background-color: #5346a0;
+  color: white;
+}
+
+td button:first-of-type:hover {
+  background-color: #403380;
+}
+
+/* Delete Button */
+td button:last-of-type {
+  background-color: #e57373;
+  color: white;
+}
+
+td button:last-of-type:hover {
+  background-color: #d32f2f;
+}
