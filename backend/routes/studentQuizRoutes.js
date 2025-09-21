@@ -8,10 +8,14 @@ const { MODULE_TABLE } = require("../config");
 const { QUESTIONS_TABLE } = require("../config"); 
 const { STUDENTS_TABLE } = require("../config");
 const { successResponse, errorResponse } = require("../utils/apiResponse");
+const { checkAuthentication, checkRoles } = require("../middlewares/checkAuthentication");
 
+
+// Apply authentication to all routes
+router.use(checkAuthentication);
 
 // GET - all quiz attempts of a student
-router.get("/all-quiz/:student_id", (req, res) => {
+router.get("/all-quiz/:student_id", checkRoles(["admin", "coordinator"]), (req, res) => {
   const { student_id } = req.params; 
 
   const sql = `
@@ -43,7 +47,7 @@ router.get("/all-quiz/:student_id", (req, res) => {
 
 
 // GET - specific quiz attempt of a student
-router.get("/stud-quiz/:student_id/:attempt_id", (req, res) => {
+router.get("/stud-quiz/:student_id/:attempt_id", checkRoles(["admin", "coordinator"]),(req, res) => {
   const { student_id, attempt_id } = req.params;
   console.log(`Fetching attempt_id=${attempt_id} for student_id=${student_id}`);
 
@@ -72,7 +76,7 @@ router.get("/stud-quiz/:student_id/:attempt_id", (req, res) => {
 
 
 // GET-question attempts for a specific quiz
-router.get("/:student_id/quiz/:quiz_id/questions", (req, res) => {
+router.get("/:student_id/quiz/:quiz_id/questions",checkRoles(["admin", "coordinator"]), (req, res) => {
   const { student_id, quiz_id } = req.params;
   console.log(`Fetching question attempts for student_id=${student_id}, quiz_id=${quiz_id}`);
 
@@ -100,7 +104,7 @@ router.get("/:student_id/quiz/:quiz_id/questions", (req, res) => {
 
 
 // POST - Add new quiz attempt with answers and group_id
-router.post("/add-quiz-attempt", (req, res) => {
+router.post("/add-quiz-attempt", checkRoles(["admin", "coordinator"]),(req, res) => {
   const { student_id, quiz_id, group_id, answers } = req.body;
 
   // Validate input
@@ -145,7 +149,7 @@ router.post("/add-quiz-attempt", (req, res) => {
 
 
 // PUT - update quiz attempt answers
-router.put("/update-answer/:attempt_id", (req, res) => {
+router.put("/update-answer/:attempt_id", checkRoles(["admin", "coordinator"]), (req, res) => {
   const attempt_id = req.params.attempt_id;
   const { student_id, quiz_id, group_id, answers } = req.body;
 
@@ -199,7 +203,7 @@ router.put("/update-answer/:attempt_id", (req, res) => {
 
 
 // DELETE - Remove quiz attempt
-router.delete("/delete/:attempt_id/", (req, res) => {
+router.delete("/delete/:attempt_id/", checkRoles(["admin", "coordinator"]), (req, res) => {
   const { attempt_id } = req.params;
 
   if (!attempt_id) return res.send({ status: "error", message: "attempt_id required" });
