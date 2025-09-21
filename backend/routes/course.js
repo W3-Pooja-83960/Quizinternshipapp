@@ -1,13 +1,21 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../config/db");
-const { COURSE_TABLE } = require("../config/index");
+const { COURSE_TABLE } = require("../config");
 const { successResponse, errorResponse } = require("../utils/apiResponse");
+const { checkAuthentication, checkRoles } = require("../middlewares/checkAuthentication");
 
 console.log("course routes loaded");
 
-// Get all courses
-router.get("/all-course", (request, response) => {
+// Apply authentication to all routes
+router.use(checkAuthentication);
+
+
+// --------------------
+// GET ALL COURSES
+// Accessible by: admin, coordinator
+// --------------------
+router.get("/all-course", checkRoles(["admin", "coordinator"]), (request, response) => {
   console.log("Fetching all courses...");
   const sql = `SELECT * FROM ${COURSE_TABLE}`;
 
@@ -19,15 +27,18 @@ router.get("/all-course", (request, response) => {
     }
 
     if (results.length === 0) {
-      return response.send(successResponse("No course found."));
+      return response.send(errorResponse("No course found."));
     }
 
     return response.send(successResponse(results));
   });
 });
 
-// Get course by ID
-router.get("/:id", (request, response) => {
+// --------------------
+// GET BATCH BY ID
+// Accessible by: admin, coordinator
+// --------------------
+router.get("/:id", checkRoles(["admin", "coordinator"]), (request, response) => {
   const { id } = request.params;
   const sql = `SELECT * FROM ${COURSE_TABLE} WHERE course_id = ?`;
 
@@ -47,7 +58,7 @@ router.get("/:id", (request, response) => {
 
 
 //add batch
-router.post("/add-course", (req, res) => {
+router.post("/add-course", checkRoles(["admin", "coordinator"]),(req, res) => {
   const { course_id, course_name } = req.body;
   const sql = `INSERT INTO ${COURSE_TABLE} (course_id, course_name) VALUES (?, ?)`;
 
@@ -64,7 +75,7 @@ router.post("/add-course", (req, res) => {
 
 
 // Update course
-router.put("/update-course/:id", (req, res) => {
+router.put("/update-course/:id",checkRoles(["admin", "coordinator"]), (req, res) => {
   const { id } = req.params;                
   const { course_name } = req.body;         
 
@@ -89,7 +100,7 @@ router.put("/update-course/:id", (req, res) => {
 
 
 // ✅ Delete batch
-router.delete("/delete-course/:id", (req, res) => {
+router.delete("/delete-course/:id",checkRoles(["admin", "coordinator"]), (req, res) => {
   const { id } = req.params;
 
   const sql = `DELETE FROM ${COURSE_TABLE} WHERE course_id = ?`;
