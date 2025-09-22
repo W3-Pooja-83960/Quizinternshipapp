@@ -1,6 +1,5 @@
 import axios from "axios";
 import { BASE_URL } from "../Config"; // Adjust the path to your config
-
 // GET all courses with field mapping
 async function fetchAllCourses() {
   try {

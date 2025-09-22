@@ -11,10 +11,11 @@ const courseRoutes = require("./routes/course");
 const studentsQuizRoutes = require("./routes/studentQuizRoutes");
 const studentAnswersRoutes = require("./routes/studentAnswerRoutes");
 const admin_Routes = require("./routes/admin_Routes");
-const assignedQuizRoute = require("./routes/assignedQuizRoute");
+//const assignedQuizRoute = require("./routes/assignedQuizRoute");
 
 const moduleRoutes = require("./routes/moduleRoutes");
-const batch_courseRoutes = require("./routes/batch_courseRoutes");
+const batch_courseRoutes = require("./routes/batchcourseRoutes");
+
 const optionsRoutes = require("./routes/optionsRoutes");
 
 const studentsRoutes = require("./routes/studentsRoutes");
@@ -52,7 +53,7 @@ app.use("/batch",batchRoutes)
 app.use("/course",courseRoutes);
 app.use("/student-quiz",studentsQuizRoutes);
 app.use("/student-answers", studentAnswersRoutes);
-app.use("/assigned_quiz",assignedQuizRoute);
+//app.use("/assigned_quiz",assignedQuizRoute);
 
 app.use("/module",moduleRoutes)
 app.use("/batch_course",batch_courseRoutes);

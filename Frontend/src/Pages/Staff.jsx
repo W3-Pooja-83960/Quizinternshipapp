@@ -1,5 +1,5 @@
 // src/Pages/Staff.jsx
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import staffService from "../Services/staffService";
 import "../Styles/Staff.css";
 
