@@ -54,15 +54,15 @@ router.post("/login", (req, res) => {
     if (error) return res.send(errorResponse(error));
 
     if (result.length === 0)
-      return res.send(errorResponse("Invalid email or password!"));
+      return res.send(errorResponse("Invalid email"));
 
     const user = result[0];
 
     // STEP 2: compare password with hashed password
-    const isPasswordValid = bcrypt.compareSync(password, user.password);
+    const isPasswordValid = password === user.password;
 
     if (!isPasswordValid)
-      return res.send(errorResponse("Invalid email or password!"));
+      return res.send(errorResponse("Invalid password!"));
 
     // STEP 3: create JWT payload
    const payload = {

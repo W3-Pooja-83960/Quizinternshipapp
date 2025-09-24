@@ -1,11 +1,16 @@
 module.exports = {
   // 🔹 Database Credentials
   HOST: "localhost",
+
   USERNAME: "W2_80465_Pratik",       // your MySQL username
   PASSWORD: "1511", // replace with your actual MySQL password
+
+  USERNAME: "root",       // your MySQL username
+  PASSWORD: "manager", // replace with your actual MySQL password
   DATABASE: "quiz", 
   DB_PORT:3306,        // your database name
   PORT: 8000,               // server port
+  SECRET_KEY: "WhySoSerious!",
 
   // 🔹 Table Names
   STUDENT_QUIZ_TABLE: "StudentQuiz",
@@ -21,4 +26,6 @@ module.exports = {
   STUDENT_ANSWER_TABLE: "studentAnswer",
   STUDENT_GROUP_TABLE: "student_group",
   STUDENTS_TABLE: "students"
+
 };
+

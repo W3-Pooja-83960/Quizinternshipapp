@@ -3,8 +3,6 @@ const { successResponse, errorResponse } = require("../utils/apiResponse");
 
 const { COURSE_MODULE_TABLE } = require("../config/index");
 
-const { COURSE_MODULE_TABLE } = require("../config");
-
 const pool = require("../config");
 const router = express.Router();
 

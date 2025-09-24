@@ -1,7 +1,7 @@
 const express = require("express");
 const { successResponse, errorResponse } = require("../utils/apiResponse");
-const { STUDENTS_TABLE } = require("../config/index");
-const pool = require("../config");
+const { STUDENTS_TABLE } = require("../config");
+const pool = require("../config/db");
 //const { app } = require(".../server");
 
 const router = express.Router();
@@ -13,7 +13,8 @@ const router = express.Router();
 
 // Get all students
 router.get("/all-students", (request, response) => {
-  const sql = `SELECT * FROM ${STUDENTS_TABLE}`;
+  const sql = `SELECT student_id, firstName, lastName, email, prnNo, course_id, batch_id
+   FROM ${STUDENTS_TABLE}`;
 
   pool.query(sql, (error, results) => {
     if (error) {
@@ -31,7 +32,10 @@ router.get("/all-students", (request, response) => {
 // Get a student by ID
 router.get("/student/:student_id", (request, response) => {
   const { student_id } = request.params;
-  const sql = `SELECT * FROM ${STUDENTS_TABLE} WHERE student_id = ?`;
+
+  const sql = `SELECT student_id, firstName, lastName, email, prnNo, course_id, batch_id 
+  FROM ${STUDENTS_TABLE} 
+  WHERE student_id = ?`;
 
   pool.execute(sql, [student_id], (error, results) => {
     if (error) {
@@ -48,12 +52,11 @@ router.get("/student/:student_id", (request, response) => {
 
 // Add a new student
 router.post("/add-student", (request, response) => {
-  const { firstName, lastName, email, password, prnNo, course_id } = request.body;
+  const { firstName, lastName, email, password, prnNo, course_id,batch_id,group_id } = request.body;
 
   const sql = `
-    INSERT INTO ${STUDENTS_TABLE} (firstName, lastName, email, password, prnNo, course_id)
-    VALUES (?, ?, ?, ?, ?, ?)
-  `;
+    INSERT INTO ${STUDENTS_TABLE} (firstName, lastName, email, password, prnNo, course_id, batch_id, group_id)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 
   pool.execute(sql, [firstName, lastName, email, password, prnNo, course_id], (error, result) => {
     if (error) {
@@ -70,15 +73,13 @@ router.post("/add-student", (request, response) => {
 // Update a student
 router.put("/update-student/:student_id", (request, response) => {
   const { student_id } = request.params;
-  const { firstName, lastName, email, password, prnNo, course_id } = request.body;
+  const { firstName, lastName, email, password, prnNo, course_id, batch_id, group_id } = request.body;
 
-  const sql = `
-    UPDATE ${STUDENTS_TABLE}
-    SET firstName = ?, lastName = ?, email = ?, password = ?, prnNo = ?, course_id = ?
-    WHERE student_id = ?
-  `;
+  const sql = `UPDATE ${STUDENTS_TABLE}
+    SET firstName = ?, lastName = ?, email = ?, password = ?, prnNo = ?, course_id = ?, batch_id = ?, group_id = ?
+    WHERE student_id = ? `;
 
-  pool.execute(sql, [firstName, lastName, email, password, prnNo, course_id, student_id], (error, result) => {
+  pool.execute(sql, [firstName, lastName, email, password, prnNo, course_id, batch_id, group_id, student_id], (error, result) => {
     if (error) {
       return response.send(errorResponse(error));
     }
@@ -117,4 +118,4 @@ router.delete("/delete-student/:student_id", (request, response) => {
 module.exports = router;
 
 
-app.use("/students", studentsRoutes);
+// app.use("/students", studentsRoutes);
