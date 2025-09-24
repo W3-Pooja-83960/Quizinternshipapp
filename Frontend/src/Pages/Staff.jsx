@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import staffService from "../Services/staffServices";
 import "../Styles/staff.css";
@@ -9,7 +10,7 @@ export default function Staff() {
   const [adding, setAdding] = useState(false);
   const [editing, setEditing] = useState(false);
   const [editId, setEditId] = useState(null);
-
+  
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -17,6 +18,7 @@ export default function Staff() {
     password: "",
     role: "",
   });
+
 
   const [message, setMessage] = useState({ type: "", text: "" });
 
@@ -39,6 +41,7 @@ export default function Staff() {
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
+
 
   const handleAddSubmit = async (e) => {
     e.preventDefault();
@@ -94,6 +97,7 @@ export default function Staff() {
   };
 
   if (loading) return <p>Loading staff...</p>;
+
 
   return (
     <div className="table-container">
@@ -222,6 +226,77 @@ export default function Staff() {
           </tbody>
         </table>
       )}
+
+      <form onSubmit={handleSubmit} className="staff-form">
+        <input
+          type="text"
+          name="firstName"
+          placeholder="First Name"
+          value={form.firstName}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="text"
+          name="lastName"
+          placeholder="Last Name"
+          value={form.lastName}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={form.email}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={form.password}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="text"
+          name="role"
+          placeholder="Role"
+          value={form.role}
+          onChange={handleChange}
+          required
+        />
+        <button type="submit">{editing ? "Update" : "Add"} Staff</button>
+        {editing && <button type="button" onClick={() => { setEditing(false); setForm({ firstName: "", lastName: "", email: "", password: "", role: "" }); }}>Cancel</button>}
+      </form>
+
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {staff.map((s) => (
+            <tr key={s.staff_id}>
+              <td>{s.staff_id}</td>
+              <td>{s.firstName} {s.lastName}</td>
+              <td>{s.email}</td>
+              <td>{s.role}</td>
+              <td>
+                <button onClick={() => startEdit(s)}>Edit</button>
+                <button onClick={() => handleDelete(s.staff_id)}>Delete</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
