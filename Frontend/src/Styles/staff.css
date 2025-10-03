@@ -1,0 +1,116 @@
+/* Container */
+.table-container {
+    width: 90%;
+    margin: 40px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .table-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 26px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  /* Forms */
+  .staff-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 25px;
+    justify-content: center;
+  }
+  
+  .staff-form input {
+    padding: 10px;
+    width: 220px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+  }
+  
+  .staff-form button {
+    padding: 10px 18px;
+    background: #0077ff;
+    border: none;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 14px;
+  }
+  
+  .staff-form button:hover {
+    background: #005ec2;
+  }
+  
+  /* Table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+  }
+  
+  table th,
+  table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    font-size: 15px;
+  }
+  
+  table th {
+    background: #0077ff;
+    color: white;
+    font-weight: 600;
+  }
+  
+  table tr:nth-child(even) {
+    background: #f9f9f9;
+  }
+  
+  table tr:hover {
+    background: #f1f1f1;
+  }
+  
+  /* Buttons inside table */
+  .action-buttons .btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: 0.3s;
+  }
+
+  .btn.add {
+    background: #5346a0;
+    color: white;
+  }
+  
+  .btn.add:hover {
+    background:#5346a0;
+  }
+  
+  
+  .btn.edit {
+    background: #6f68ba;
+    color:white;
+  }
+  
+  .btn.edit:hover {
+    background: #6f68ba;
+  }
+  
+  .btn.delete {
+    background: #dc3545;
+    color: white;
+  }
+  
+  .btn.delete:hover {
+    background: #b02a37;
+  }
+  

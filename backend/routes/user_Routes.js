@@ -54,15 +54,15 @@ router.post("/login", (req, res) => {
     if (error) return res.send(errorResponse(error));
 
     if (result.length === 0)
-      return res.send(errorResponse("Invalid email"));
+      return res.send(errorResponse("Invalid email or password!"));
 
     const user = result[0];
 
     // STEP 2: compare password with hashed password
-    const isPasswordValid = password === user.password;
+    const isPasswordValid = bcrypt.compareSync(password, user.password);
 
     if (!isPasswordValid)
-      return res.send(errorResponse("Invalid password!"));
+      return res.send(errorResponse("Invalid email or password!"));
 
     // STEP 3: create JWT payload
    const payload = {
@@ -120,7 +120,7 @@ router.post("/student-register", (req, resp) => {
 });
 
 
-// POST: login a user
+// POST: login a student login
 router.post("/student-login", (req, res) => {
   const { email, password } = req.body;
 
@@ -146,7 +146,9 @@ router.post("/student-login", (req, res) => {
                         userId: user.student_id,
                         firstName: user.firstName,
                         lastName: user.lastName,   
-                        email: user.email
+                        email: user.email,
+                        groupName: user.group_name,
+                        role: user.role
                       };
     delete user.password; // remove password from user object    
 
@@ -162,7 +164,6 @@ router.post("/student-login", (req, res) => {
     );
   });
 });
-
 
 
 
