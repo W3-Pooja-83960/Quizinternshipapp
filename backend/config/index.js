@@ -1,31 +1,26 @@
-module.exports = {
-  // 🔹 Database Credentials
-  HOST: "localhost",
+module.exports={
+    HOST:"localhost",
+    USERNAME:"root",
+    PASSWORD:"manager",
+    DATABASE:"quiz",
+    PORT: 5000, // for Express,
+    DB_PORT: 3306, //  MySQL port
+    BATCH_TABLE:"batch",
+    COURSE_TABLE:"course",
+    STUDENTS_TABLE:"students",
+    STUDENTS_QUIZ_TABLE :"StudentQuiz" ,
+    STUDENTS_ANS_TABLE :"studentAnswer",
+    QUESTIONS_TABLE: "questions",
+    OPTIONS_TABLE: "options",
+    QUIZ_TABLE: "quiz",
+    MODULE_TABLE: "module",
+    STUDENT_BATCH_TABLE: "student_batch",
+    STAFF_TABLE : "staff",
+    BATCH_COURSE_TABLE : "batch_course",
+    COURSE_MODULE_TABLE : "course_module",
+    STUDENTS_GROUP_TABLE : "student_group",
+    QUESTION_BANK_TABLE : "question_bank",
 
-  USERNAME: "W2_80465_Pratik",       // your MySQL username
-  PASSWORD: "1511", // replace with your actual MySQL password
+    SECRET_KEY : "123abcd"
 
-  USERNAME: "root",       // your MySQL username
-  PASSWORD: "manager", // replace with your actual MySQL password
-  DATABASE: "quiz", 
-  DB_PORT:3306,        // your database name
-  PORT: 8000,               // server port
-  SECRET_KEY: "WhySoSerious!",
-
-  // 🔹 Table Names
-  STUDENT_QUIZ_TABLE: "StudentQuiz",
-  BATCH_TABLE: "batch",
-  BATCH_COURSE_TABLE: "batch_course",
-  COURSE_TABLE: "course",
-  COURSE_MODULE_TABLE: "course_module",
-  MODULE_TABLE: "module",
-  OPTIONS_TABLE: "options",
-  QUESTIONS_TABLE: "questions",
-  QUIZ_TABLE: "quiz",
-  STAFF_TABLE: "staff",
-  STUDENT_ANSWER_TABLE: "studentAnswer",
-  STUDENT_GROUP_TABLE: "student_group",
-  STUDENTS_TABLE: "students"
-
-};
-
+}

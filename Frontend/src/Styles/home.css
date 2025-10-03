@@ -45,3 +45,12 @@
   font-size: 0.95rem;
   color: #333;
 }
+.welcome-message {
+  background-color: #dff0d8;
+  color: #3c763d;
+  padding: 10px 15px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  font-weight: bold;
+  text-align: center;
+}

@@ -8,12 +8,22 @@ const pool = mysql.createPool({
   database: DATABASE,
   waitForConnections: true,
   connectionLimit: 10,
-  maxIdle: 10,
-  idleTimeout: 60000,
+  maxIdle: 10, 
+  idleTimeout: 60000, 
   queueLimit: 0,
   enableKeepAlive: true,
   keepAliveInitialDelay: 0,
   dateStrings: true
+ 
 });
+
+const query = (sql, params) => {
+  return new Promise((resolve, reject) => {
+    pool.query(sql, params, (err, results) => {
+      if (err) return reject(err);
+      resolve(results);
+    });
+  });
+};
 
 module.exports = pool;

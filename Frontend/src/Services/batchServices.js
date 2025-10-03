@@ -29,7 +29,7 @@ async function fetchAllBatches() {
   }
 }
 
-// Add, Update, Delete functions remain the same, always include headers
+// Add
 async function addBatch(batchData) {
   const response = await axios.post(`${BASE_URL}/batch/add-batch`, batchData, {
     headers: getAuthHeaders(),
@@ -37,6 +37,7 @@ async function addBatch(batchData) {
   return response.data;
 }
 
+//update
 async function updateBatch(id, batchData) {
   const response = await axios.put(`${BASE_URL}/batch/update-batch/${id}`, batchData, {
     headers: getAuthHeaders(),
@@ -44,6 +45,7 @@ async function updateBatch(id, batchData) {
   return response.data;
 }
 
+//delete
 async function deleteBatch(id) {
   const response = await axios.delete(`${BASE_URL}/batch/delete-batch/${id}`, {
     headers: getAuthHeaders(),

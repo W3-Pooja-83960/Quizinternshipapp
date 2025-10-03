@@ -2,8 +2,8 @@
 /* Buttons */
 /* ============================= */
 
-/* Add Batch Button */
-.batch-add-button {
+/* Add Course Button */
+.course-add-button {
   background-color: #4caf50; /* Green */
   color: white;
   padding: 8px 16px;
@@ -13,49 +13,50 @@
   font-size: 14px;
   font-weight: bold;
   transition: background-color 0.3s ease;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
-.batch-add-button:hover {
+.course-add-button:hover {
   background-color: #45a049;
 }
 
 /* Edit/Delete Buttons */
-.batch-edit-button {
+.course-edit-button {
   background-color: #2196f3;
   color: white;
+  font-weight: bold;
   padding: 6px 12px;
   border: none;
-  font-weight: bold;
   border-radius: 6px;
   cursor: pointer;
   font-size: 13px;
+  width: 80px;
 }
 
-.batch-edit-button:hover {
+.course-edit-button:hover {
   background-color: #1976d2;
 }
 
-.batch-delete-button {
+.course-delete-button {
   background-color: #f44336;
   color: white;
+  width: 80px;
+  font-weight: bold;
   padding: 6px 12px;
   border: none;
-  font-weight: bold;
   border-radius: 6px;
   cursor: pointer;
   font-size: 13px;
 }
 
-.batch-delete-button:hover {
+.course-delete-button:hover {
   background-color: #d32f2f;
 }
 
 /* ============================= */
 /* Form Styling */
 /* ============================= */
-
-.batch-form {
+.course-form {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
@@ -67,8 +68,7 @@
   align-items: center;
 }
 
-.batch-form input,
-.batch-form .react-datepicker-wrapper {
+.course-form input {
   padding: 8px;
   font-size: 14px;
   border: 1px solid #ccc;
@@ -77,7 +77,7 @@
   min-width: 150px;
 }
 
-.batch-form button {
+.course-form button {
   padding: 8px 16px;
   border: none;
   border-radius: 6px;
@@ -88,80 +88,77 @@
 }
 
 /* Submit Button */
-.batch-form button[type="submit"] {
+.course-form button[type="submit"] {
   background-color: #4caf50;
   color: white;
 }
 
-.batch-form button[type="submit"]:hover {
+.course-form button[type="submit"]:hover {
   background-color: #45a049;
 }
 
 /* Cancel Button */
-.batch-form button[type="button"] {
+.course-form button[type="button"] {
   background-color: #e57373;
   color: white;
 }
 
-.batch-form button[type="button"]:hover {
+.course-form button[type="button"]:hover {
   background-color: #d32f2f;
 }
 
 /* ============================= */
 /* Table Styling */
 /* ============================= */
-
-.batch-table {
+.course-table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 16px;
 }
 
-.batch-table th,
-.batch-table td {
+.course-table th,
+.course-table td {
   padding: 8px 12px;
   border: 1px solid #ddd;
   text-align: center;
  
 }
 
-.batch-table th {
-  background-color: #5346a0;
+.course-table th {
+   background-color: #5346a0;
   font-weight: bold;
+  text-align: center;
    color: white;
- 
 }
 
-/* Table row hover */
-.batch-table tr:hover {
+.course-table tr:hover {
   background-color: #f1f1f1;
 }
 
 /* ============================= */
 /* Notifications */
 /* ============================= */
-
-.batch-message {
+.course-message {
   padding: 10px;
   margin-bottom: 12px;
   border-radius: 6px;
   font-weight: bold;
 }
 
-.batch-message.success {
+.course-message.success {
   background-color: #c8e6c9;
   color: #256029;
 }
 
-.batch-message.error {
+.course-message.error {
   background-color: #ffcdd2;
   color: #c62828;
 }
 
 /* ============================= */
 /* Container */
-.batch-table-container {
-  max-width: 1000px;
+.course-table-container {
+  max-width: 900px;
   margin: 40px auto;
   padding: 20px;
   border-radius: 10px;
@@ -170,7 +167,7 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.batch-table-container h2 {
+.course-table-container h2 {
   text-align: center;
   margin-bottom: 20px;
   color: #333;

@@ -1,0 +1,196 @@
+/* ================= Container & Titles ================= */
+.module-container {
+ max-width: 1200px;
+  margin: 40px auto;
+  padding: 20px;
+  border-radius: 10px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.module-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px; 
+  font-weight: bold;
+  color: #333;
+}
+.module-title {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 16px;
+  align-content: center;
+}
+
+/* ================= Notification Messages ================= */
+.module-message {
+  padding: 10px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+}
+
+.module-message.success {
+  background-color: #c8e6c9;
+  color: #256029;
+}
+
+.module-message.error {
+  background-color: #ffcdd2;
+  color: #c62828;
+}
+
+/* ================= Loading / No Data ================= */
+.module-loading,
+.module-no-data {
+  font-size: 16px;
+  color: #555;
+  margin-top: 12px;
+}
+
+/* ================= Dropdown & Add Button ================= */
+.module-dropdown {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.module-course-dropdown {
+  padding: 8px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  min-width: 180px;
+}
+
+.module-add-button {
+  padding: 8px 16px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.module-add-button:hover {
+  background-color: #45a049;
+}
+
+/* ================= Forms ================= */
+.module-form-add,
+.module-form-edit {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 12px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  align-items: center;
+}
+
+.module-input {
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  flex: 1 1 150px;
+  min-width: 150px;
+}
+
+.module-submit-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  background-color: #4caf50;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.module-submit-button:hover {
+  background-color: #45a049;
+}
+
+.module-cancel-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  background-color: #e57373;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.module-cancel-button:hover {
+  background-color: #d32f2f;
+}
+
+/* ================= Table ================= */
+.module-table {
+  width: 100%;
+  border-collapse: collapse;
+  
+}
+
+.module-table th,
+.module-table td {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  text-align: left;
+  
+}
+
+.module-table th {
+ background-color: #5346a0;
+ color: white;
+}
+
+.col-id { width: 80px; }
+.col-name { width: 200px; }
+.col-course-id { width: 100px; }
+.col-course-name { width: 180px; }
+.col-actions { width: 140px; text-align: center; }
+
+/* ================= Action Buttons ================= */
+.module-action-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.module-edit-button {
+  padding: 6px 12px;
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.module-edit-button:hover {
+  background-color: #1976d2;
+}
+
+.module-delete-button {
+  padding: 6px 12px;
+  background-color: #f44336;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.module-delete-button:hover {
+  background-color: #d32f2f;
+}

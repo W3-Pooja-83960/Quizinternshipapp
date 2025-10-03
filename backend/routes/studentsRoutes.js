@@ -67,13 +67,14 @@ router.post("/add-student", checkRoles(["admin"]),(request, response) => {
 // Update a student
 router.put("/update-student/:student_id", checkRoles(["admin"]),(request, response) => {
   const { student_id } = request.params;
-  const { firstName, lastName, email, password, prnNo, course_id, batch_id, group_name} = request.body;
+  const { prnNo, course_id, batch_id, group_name} = request.body;
 
-  const sql = ` UPDATE ${STUDENTS_TABLE}
-    SET firstName = ?, lastName = ?, email = ?, password = ?, prnNo = ?, course_id = ? ,batch_id = ?, group_name = ?
-    WHERE student_id = ?  `;
+  const sql = `UPDATE ${STUDENTS_TABLE}
+    SET prnNo = ?, course_id = ?, batch_id = ?, group_name = ?
+    WHERE student_id = ?`;
 
-  pool.execute(sql, [firstName, lastName, email, password, prnNo, course_id,batch_id, group_name, student_id], (error, result) => {
+  pool.execute(sql, [ prnNo, course_id, batch_id, group_name, student_id], (error, result) => {
+
     if (error) {
       return response.send(errorResponse(error));
     }
