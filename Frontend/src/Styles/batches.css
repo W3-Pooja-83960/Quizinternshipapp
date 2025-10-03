@@ -1,5 +1,9 @@
+/* ============================= */
+/* Buttons */
+/* ============================= */
+
 /* Add Batch Button */
-.btn.add {
+.batch-add-button {
   background-color: #4caf50; /* Green */
   color: white;
   padding: 8px 16px;
@@ -12,40 +16,45 @@
   margin-bottom: 12px;
 }
 
-.btn.add:hover {
+.batch-add-button:hover {
   background-color: #45a049;
 }
 
 /* Edit/Delete Buttons */
-.btn.edit {
+.batch-edit-button {
   background-color: #2196f3;
   color: white;
   padding: 6px 12px;
   border: none;
+  font-weight: bold;
   border-radius: 6px;
   cursor: pointer;
   font-size: 13px;
 }
 
-.btn.edit:hover {
+.batch-edit-button:hover {
   background-color: #1976d2;
 }
 
-.btn.delete {
+.batch-delete-button {
   background-color: #f44336;
   color: white;
   padding: 6px 12px;
   border: none;
+  font-weight: bold;
   border-radius: 6px;
   cursor: pointer;
   font-size: 13px;
 }
 
-.btn.delete:hover {
+.batch-delete-button:hover {
   background-color: #d32f2f;
 }
 
-/* Form container */
+/* ============================= */
+/* Form Styling */
+/* ============================= */
+
 .batch-form {
   display: flex;
   flex-wrap: wrap;
@@ -58,18 +67,16 @@
   align-items: center;
 }
 
-/* Input fields & DatePickers */
 .batch-form input,
 .batch-form .react-datepicker-wrapper {
   padding: 8px;
   font-size: 14px;
   border: 1px solid #ccc;
   border-radius: 6px;
-  flex: 1 1 150px; /* makes inputs & datepicker responsive */
+  flex: 1 1 150px;
   min-width: 150px;
 }
 
-/* Submit / Cancel buttons */
 .batch-form button {
   padding: 8px 16px;
   border: none;
@@ -80,7 +87,7 @@
   transition: background-color 0.3s ease;
 }
 
-/* Add / Submit button */
+/* Submit Button */
 .batch-form button[type="submit"] {
   background-color: #4caf50;
   color: white;
@@ -90,7 +97,7 @@
   background-color: #45a049;
 }
 
-/* Cancel button */
+/* Cancel Button */
 .batch-form button[type="button"] {
   background-color: #e57373;
   color: white;
@@ -100,34 +107,71 @@
   background-color: #d32f2f;
 }
 
-/* Table styling */
-table {
+/* ============================= */
+/* Table Styling */
+/* ============================= */
+
+.batch-table {
   width: 100%;
   border-collapse: collapse;
+  margin-top: 16px;
 }
 
-th, td {
+.batch-table th,
+.batch-table td {
   padding: 8px 12px;
   border: 1px solid #ddd;
-  text-align: left;
+  text-align: center;
+ 
 }
 
-th {
-  background-color: #f2f2f2;
+.batch-table th {
+  background-color: #5346a0;
+  font-weight: bold;
+   color: white;
+ 
 }
 
-.message {
+/* Table row hover */
+.batch-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* ============================= */
+/* Notifications */
+/* ============================= */
+
+.batch-message {
   padding: 10px;
   margin-bottom: 12px;
   border-radius: 6px;
+  font-weight: bold;
 }
 
-.message.success {
+.batch-message.success {
   background-color: #c8e6c9;
   color: #256029;
 }
 
-.message.error {
+.batch-message.error {
   background-color: #ffcdd2;
   color: #c62828;
+}
+
+/* ============================= */
+/* Container */
+.batch-table-container {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 20px;
+  border-radius: 10px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.batch-table-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
 }

@@ -1,0 +1,174 @@
+/* ============================= */
+/* Buttons */
+/* ============================= */
+
+/* Add Course Button */
+.course-add-button {
+  background-color: #4caf50; /* Green */
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  margin-bottom: 10px;
+}
+
+.course-add-button:hover {
+  background-color: #45a049;
+}
+
+/* Edit/Delete Buttons */
+.course-edit-button {
+  background-color: #2196f3;
+  color: white;
+  font-weight: bold;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  width: 80px;
+}
+
+.course-edit-button:hover {
+  background-color: #1976d2;
+}
+
+.course-delete-button {
+  background-color: #f44336;
+  color: white;
+  width: 80px;
+  font-weight: bold;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.course-delete-button:hover {
+  background-color: #d32f2f;
+}
+
+/* ============================= */
+/* Form Styling */
+/* ============================= */
+.course-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 12px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  align-items: center;
+}
+
+.course-form input {
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  flex: 1 1 150px;
+  min-width: 150px;
+}
+
+.course-form button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Submit Button */
+.course-form button[type="submit"] {
+  background-color: #4caf50;
+  color: white;
+}
+
+.course-form button[type="submit"]:hover {
+  background-color: #45a049;
+}
+
+/* Cancel Button */
+.course-form button[type="button"] {
+  background-color: #e57373;
+  color: white;
+}
+
+.course-form button[type="button"]:hover {
+  background-color: #d32f2f;
+}
+
+/* ============================= */
+/* Table Styling */
+/* ============================= */
+.course-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+}
+
+.course-table th,
+.course-table td {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  text-align: center;
+ 
+}
+
+.course-table th {
+   background-color: #5346a0;
+  font-weight: bold;
+  text-align: center;
+   color: white;
+}
+
+.course-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* ============================= */
+/* Notifications */
+/* ============================= */
+.course-message {
+  padding: 10px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+.course-message.success {
+  background-color: #c8e6c9;
+  color: #256029;
+}
+
+.course-message.error {
+  background-color: #ffcdd2;
+  color: #c62828;
+}
+
+/* ============================= */
+/* Container */
+.course-table-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+  border-radius: 10px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.course-table-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}

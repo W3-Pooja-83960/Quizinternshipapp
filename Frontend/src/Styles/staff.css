@@ -1,116 +1,190 @@
+/* ============================= */
 /* Container */
-.table-container {
-    width: 90%;
-    margin: 40px auto;
-    padding: 20px;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  }
-  
-  .table-container h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 26px;
-    font-weight: bold;
-    color: #333;
-  }
-  
-  /* Forms */
-  .staff-form {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-bottom: 25px;
-    justify-content: center;
-  }
-  
-  .staff-form input {
-    padding: 10px;
-    width: 220px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 14px;
-  }
-  
-  .staff-form button {
-    padding: 10px 18px;
-    background: #0077ff;
-    border: none;
-    color: white;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: 0.3s;
-    font-size: 14px;
-  }
-  
-  .staff-form button:hover {
-    background: #005ec2;
-  }
-  
-  /* Table */
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: center;
-  }
-  
-  table th,
-  table td {
-    border: 1px solid #ddd;
-    padding: 12px;
-    font-size: 15px;
-  }
-  
-  table th {
-    background: #0077ff;
-    color: white;
-    font-weight: 600;
-  }
-  
-  table tr:nth-child(even) {
-    background: #f9f9f9;
-  }
-  
-  table tr:hover {
-    background: #f1f1f1;
-  }
-  
-  /* Buttons inside table */
-  .action-buttons .btn {
-    padding: 6px 12px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 13px;
-    transition: 0.3s;
-  }
+/* ============================= */
+.staff-table-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 20px;
+  border-radius: 10px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
 
-  .btn.add {
-    background: #5346a0;
-    color: white;
-  }
-  
-  .btn.add:hover {
-    background:#5346a0;
-  }
-  
-  
-  .btn.edit {
-    background: #6f68ba;
-    color:white;
-  }
-  
-  .btn.edit:hover {
-    background: #6f68ba;
-  }
-  
-  .btn.delete {
-    background: #dc3545;
-    color: white;
-  }
-  
-  .btn.delete:hover {
-    background: #b02a37;
-  }
-  
+.staff-table-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 26px;
+  font-weight: bold;
+}
+
+/* ============================= */
+/* Forms */
+/* ============================= */
+.staff-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 25px;
+  padding: 12px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  justify-content: center;
+  align-items: center;
+}
+
+.staff-form input {
+  padding: 10px;
+  width: 220px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  flex: 1 1 150px;
+  min-width: 150px;
+}
+
+.staff-form button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Submit Button */
+.staff-form button[type="submit"] {
+  background-color: #0077ff;
+  color: white;
+}
+
+.staff-form button[type="submit"]:hover {
+  background-color: #005ec2;
+}
+
+/* Cancel Button */
+.staff-form button[type="button"] {
+  background-color: #dc3545;
+  color: white;
+}
+
+.staff-form button[type="button"]:hover {
+  background-color: #b02a37;
+}
+
+/* ============================= */
+/* Table Styling */
+/* ============================= */
+.staff-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+  text-align: center;
+}
+
+.staff-table th,
+.staff-table td {
+  padding: 12px;
+  border: 1px solid #ddd;
+  font-size: 15px;
+}
+
+.staff-table th {
+   background-color: #5346a0;
+  color: white;
+  font-weight: bold;
+}
+
+.staff-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.staff-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* ============================= */
+/* Action Buttons inside Table */
+/* ============================= */
+.staff-action-buttons .btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: bold;  
+  transition: background-color 0.3s ease;
+}
+
+.staff-btn.add {
+ background-color: #4caf50; /* Green */
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  margin-bottom: 8px;
+}
+
+.staff-btn.add:hover {
+  background-color: #453b8a;
+}
+
+.staff-btn.edit {
+ background-color: #2196f3;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer; 
+  font-size: 13px;
+  width: 70px;
+}
+
+.staff-btn.edit:hover {
+   background-color: #1976d2;
+}
+
+.staff-btn.delete {
+ background-color: #f44336;
+  color: white;
+  padding: 6px 12px;
+   margin-left: 8px;
+  border: none;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  width: 70px;
+}
+
+.staff-btn.delete:hover {
+  background-color: #d32f2f;
+}
+
+/* ============================= */
+/* Notifications */
+/* ============================= */
+.staff-message {
+  padding: 10px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+.staff-message.success {
+  background-color: #c8e6c9;
+  color: #256029;
+}
+
+.staff-message.error {
+  background-color: #ffcdd2;
+  color: #c62828;
+}

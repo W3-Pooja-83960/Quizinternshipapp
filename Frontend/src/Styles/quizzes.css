@@ -1,0 +1,196 @@
+/* ============================= */
+        /* Container */
+/* ============================= */
+.quiz-table-container {
+  max-width: 1300px; 
+  margin: 40px auto;
+  padding: 20px;
+  border-radius: 10px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.quiz-table-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px; 
+  font-weight: bold;
+  color: #333;
+}
+
+/* ============================= */
+      /* Form Styling */
+/* ============================= */
+.quiz-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 12px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  justify-content: center;
+  align-items: center;
+}
+
+.quiz-form input,
+.quiz-form select {
+  padding: 8px; 
+  font-size: 13px; 
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  flex: 1 1 140px;
+  min-width: 140px;
+}
+
+/* Form buttons */
+.form-buttons button {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-right: 8px;
+  transition: background-color 0.3s ease;
+}
+
+
+/* Submit button */
+.quiz-submit-button {
+  background-color: #4caf50;
+  color: white;
+}
+
+.quiz-submit-button:hover {
+  background-color: #45a049;
+}
+
+
+/* Cancel button */
+.quiz-cancel-button {
+  background-color: #f44336;
+  color: white;
+}
+
+.quiz-cancel-button:hover {
+  background-color: #d32f2f;
+}
+
+/* Add Quiz button */
+.quiz-add-button {
+  padding: 8px 16px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: inline-block; 
+  margin-left: 20px; 
+  margin-bottom: 10px; 
+}
+
+.quiz-add-button:hover {
+  background-color: #1976d2;
+}
+
+/* ============================= */
+        /* Table Styling */
+/* ============================= */
+.quiz-table {
+  width: 100%;
+  max-width: 1300px;
+  border-collapse: collapse;
+  margin-top: 16px;
+  text-align: center;
+}
+
+.quiz-table th,
+.quiz-table td {
+  padding: 15px; 
+  border: 1px solid #ddd;
+  font-size: 15px; 
+  
+}
+
+.quiz-table th {
+  background-color: #5346a0;
+  color: white;
+  font-weight: bold;
+}
+
+.quiz-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.quiz-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Table action buttons */
+.quiz-action-button,
+.quiz-action-button-add-questions,
+.btn.view-questions {
+  padding: 4px 10px;
+  font-size: 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin: 0 2px;
+  transition: 0.3s;
+}
+
+/* Edit button */
+.quiz-action-button {
+  background-color: #2196f3;
+  color: white;
+  font-weight: bold;
+  width: 70px;
+}
+
+.quiz-action-button:hover {
+  background-color: #1976d2;
+}
+
+
+/* Delete button */
+.quiz-action-button.delete {
+  background-color: #f44336;
+  color: white;
+  font-weight: bold;
+  width: 70px;
+}
+
+.quiz-action-button.delete:hover {
+  background-color: #d32f2f;
+}
+
+
+/* Add Question button */
+.quiz-action-button-add-questions {
+  background-color: #1b70b5;
+  color: white;
+  font-weight: bold;
+}
+
+.quiz-action-button-add-questions:hover {
+  background-color: #45a049;
+}
+
+
+/* View Questions button */
+.btn.view-questions {
+  background-color: #7c66bd;
+  color: white;
+  font-weight: bold;
+}
+
+.btn.view-questions:hover {
+  background-color: #b39763;
+}
+

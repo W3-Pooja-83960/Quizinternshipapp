@@ -1,63 +1,73 @@
 import axios from "axios";
-import { BASE_URL } from "../Config"; // Adjust the path to your config
-// GET all courses with field mapping
-async function fetchAllCourses() {
+import { BASE_URL } from "../Config";
+
+function getAuthHeaders() {
+  const token = localStorage.getItem("token");
+  return { Authorization: `Bearer ${token}` };
+}
+
+export async function fetchAllCourses() {
   try {
-    const response = await axios.get(`${BASE_URL}/course/all-course`);
+    const res = await axios.get(`${BASE_URL}/course/all-course`, {
+      headers: getAuthHeaders(),
+    });
 
-    // Map backend fields to frontend expected fields
-    const formatted = Array.isArray(response.data)
-      ? response.data.map((course) => ({
-          id: course.course_id,
-          name: course.course_name || "(Unnamed)",
-        }))
-      : [];
-
-    return formatted;
+    if (res.data.status === "success") {
+      return res.data.data;
+    } else {
+      console.warn("API error:", res.data.error);
+      return [];
+    }
   } catch (error) {
-    console.error("Error in fetchAllCourses:", error);
-    throw error;
+    if (error.response && error.response.status === 401) {
+      alert(error.response.data.error || "Unauthorized! Redirecting to login.");
+      localStorage.removeItem("token");
+      window.location.href = "/login";
+    }
+    console.error("Fetch courses error:", error);
+    return [];
   }
 }
 
-// POST new course
-async function addCourse(courseData) {
+export async function addCourse(courseData) {
   try {
-    const response = await axios.post(`${BASE_URL}/course/add-course`, courseData);
+    const response = await axios.post(`${BASE_URL}/course/add-course`, courseData, {
+      headers: getAuthHeaders(),
+    });
     return response.data;
   } catch (error) {
-    console.error("Error in addCourse:", error);
-    throw error;
+    console.error("Add course error:", error);
+    return null;
   }
 }
 
-// PUT update course
-async function updateCourse(id, courseData) {
+export async function updateCourse(id, courseData) {
   try {
-    const response = await axios.put(`${BASE_URL}/course/update-course/${id}`, courseData);
+    const response = await axios.put(`${BASE_URL}/course/update-course/${id}`, courseData, {
+      headers: getAuthHeaders(),
+    });
     return response.data;
   } catch (error) {
-    console.error("Error in updateCourse:", error);
-    throw error;
+    console.error("Update course error:", error);
+    return null;
   }
 }
 
-// DELETE course
-async function deleteCourse(id) {
+export async function deleteCourse(id) {
   try {
-    const response = await axios.delete(`${BASE_URL}/course/delete-course/${id}`);
+    const response = await axios.delete(`${BASE_URL}/course/delete-course/${id}`, {
+      headers: getAuthHeaders(),
+    });
     return response.data;
   } catch (error) {
-    console.error("Error in deleteCourse:", error);
-    throw error;
+    console.error("Delete course error:", error);
+    return null;
   }
 }
 
-const courseService = {
+export default {
   fetchAllCourses,
-  addCourse,
+  addCourse,  
   updateCourse,
   deleteCourse,
 };
-
-export default courseService;
