@@ -1,3 +1,4 @@
+// src/Services/staffService.js
 import axios from "axios";
 import { BASE_URL } from "../Config";
 
@@ -6,9 +7,10 @@ function getAuthHeaders() {
   return { Authorization: `Bearer ${token}` };
 }
 
-async function fetchAllBatches() {
+// GET all staff
+const getAllStaff = async () => {
   try {
-    const response = await axios.get(`${BASE_URL}/batch/all-batch`, {
+    const response = await axios.get(`${BASE_URL}/staff/all-staff`, {
       headers: getAuthHeaders(),
     });
 
@@ -16,10 +18,9 @@ async function fetchAllBatches() {
       return response.data.data;
     } else {
       console.warn("API error:", response.data.error);
-      return [];
+      return response.send(successResponse([]));
     }
   } catch (error) {
-    // Redirect to login if unauthorized
     if (error.response && error.response.status === 401) {
       alert(error.response.data.error || "Unauthorized! Redirecting to login.");
       localStorage.removeItem("token");
@@ -27,33 +28,37 @@ async function fetchAllBatches() {
     }
     return [];
   }
-}
-
-// Add, Update, Delete functions remain the same, always include headers
-async function addBatch(batchData) {
-  const response = await axios.post(`${BASE_URL}/batch/add-batch`, batchData, {
-    headers: getAuthHeaders(),
-  });
-  return response.data;
-}
-
-async function updateBatch(id, batchData) {
-  const response = await axios.put(`${BASE_URL}/batch/update-batch/${id}`, batchData, {
-    headers: getAuthHeaders(),
-  });
-  return response.data;
-}
-
-async function deleteBatch(id) {
-  const response = await axios.delete(`${BASE_URL}/batch/delete-batch/${id}`, {
-    headers: getAuthHeaders(),
-  });
-  return response.data;
-}
-
-export default {
-  fetchAllBatches,
-  addBatch,
-  updateBatch,
-  deleteBatch,
 };
+
+// Add a new staff
+const addStaff = async (staffData) => {
+  const response = await axios.post(`${BASE_URL}/staff/add`, staffData, {
+    headers: getAuthHeaders(),
+  });
+  return response.data;
+};
+
+// Update staff by ID
+const updateStaff = async (id, staffData) => {
+  const response = await axios.put(`${BASE_URL}/staff/update/${id}`, staffData, {
+    headers: getAuthHeaders(),
+  });
+  return response.data;
+};
+
+// Delete staff by ID
+const deleteStaff = async (id) => {
+  const response = await axios.delete(`${BASE_URL}/staff/delete/${id}`, {
+    headers: getAuthHeaders(),
+  });
+  return response.data;
+};
+
+const staffService = {
+  getAllStaff,
+  addStaff,
+  updateStaff,
+  deleteStaff,
+};
+
+export default staffService;

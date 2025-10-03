@@ -106,7 +106,4 @@ router.delete("/delete-student/:student_id",checkRoles(["admin"]), (request, res
 });
 
 
-
-
-
 module.exports = router;
