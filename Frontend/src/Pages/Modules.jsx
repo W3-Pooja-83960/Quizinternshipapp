@@ -1,4 +1,3 @@
-// Modules.jsx
 import React, { useState, useEffect } from "react";
 import "../Styles/module.css";
 import moduleServices from "../Services/course_moduleService";
@@ -26,7 +25,7 @@ export default function Modules() {
     loadCourses();
   }, []);
 
-  // Load all modules on mount
+  // Load all modules
   useEffect(() => {
     async function loadModules() {
       setLoading(true);
@@ -67,7 +66,9 @@ export default function Modules() {
         ? await moduleServices.fetchModulesByCourse(selectedCourse)
         : await moduleServices.fetchAllCourseModules();
       setModules(data || []);
-    } catch { setMessage({ type: "error", text: "Add failed!" }); }
+    } catch {
+      setMessage({ type: "error", text: "Add failed!" });
+    }
   };
 
   // Edit module
@@ -83,7 +84,9 @@ export default function Modules() {
         ? await moduleServices.fetchModulesByCourse(selectedCourse)
         : await moduleServices.fetchAllCourseModules();
       setModules(data || []);
-    } catch { setMessage({ type: "error", text: "Update failed!" }); }
+    } catch {
+      setMessage({ type: "error", text: "Update failed!" });
+    }
   };
 
   // Delete module
@@ -96,66 +99,78 @@ export default function Modules() {
         ? await moduleServices.fetchModulesByCourse(selectedCourse)
         : await moduleServices.fetchAllCourseModules();
       setModules(data || []);
-    } catch { setMessage({ type: "error", text: "Delete failed!" }); }
+    } catch {
+      setMessage({ type: "error", text: "Delete failed!" });
+    }
   };
 
-  if (loading) return <p className="modules-loading">Loading modules...</p>;
+  if (loading) return <p className="module-loading">Loading modules...</p>;
 
   return (
-    <div className="modules-container">
-      <h2 className="modules-title">Module Management</h2>
+    <div className="module-container">
+      <h2>Module Management</h2>
 
-      {message.text && <div className={`modules-message ${message.type}`}>{message.text}</div>}
+      {message.text && <div className={`module-message ${message.type}`}>{message.text}</div>}
 
       {/* Course selection */}
-      <div className="modules-dropdown">
-        <select className="modules-course-dropdown" value={selectedCourse} onChange={handleCourseChange}>
+      <div className="module-dropdown">
+        <select
+          className="module-course-dropdown"
+          value={selectedCourse}
+          onChange={handleCourseChange}
+        >
           <option value="">All Courses</option>
-          {courses.map(c => <option key={c.course_id} value={c.course_id}>{c.course_name} - {c.course_id}</option>)}
+          {courses.map(c => (
+            <option key={c.course_id} value={c.course_id}>
+              {c.course_name} - {c.course_id}
+            </option>
+          ))}
         </select>
-           
-        {/*  Add button */}
-        {!adding && !editing && <button className="modules-btn-add" onClick={() => setAdding(true)}>Add Module</button>}
+
+        {!adding && !editing && (
+          <button className="module-add-button" onClick={() => setAdding(true)}>Add Module</button>
+        )}
       </div>
 
       {/* Add Form */}
       {adding && (
-        <form onSubmit={handleAddSubmit} className="modules-form-add">
-          <input className="modules-input module-id" type="text" name="module_id" placeholder="Module ID" value={addForm.module_id} onChange={handleAddChange} required />
-          <input className="modules-input module-name" type="text" name="module_name" placeholder="Module Name" value={addForm.module_name} onChange={handleAddChange} required />
-          <input className="modules-input course-id" type="text" name="course_id" placeholder="Course ID" value={addForm.course_id} readOnly />
-          <input className="modules-input course-name" type="text" name="course_name" placeholder="Course Name" value={addForm.course_name} readOnly />
-          <button type="submit" className="modules-btn-submit">Add</button>
-          <button type="button" className="modules-btn-cancel" onClick={() => setAdding(false)}>Cancel</button>
+        <form onSubmit={handleAddSubmit} className="module-form-add">
+          <input className="module-input module-id" type="text" name="module_id" placeholder="Module ID" value={addForm.module_id} onChange={handleAddChange} required />
+          <input className="module-input module-name" type="text" name="module_name" placeholder="Module Name" value={addForm.module_name} onChange={handleAddChange} required />
+          <input className="module-input course-id" type="text" name="course_id" placeholder="Course ID" value={addForm.course_id} readOnly />
+          <input className="module-input course-name" type="text" name="course_name" placeholder="Course Name" value={addForm.course_name} readOnly />
+          <button type="submit" className="module-submit-button">Add</button>
+          <button type="button" className="module-cancel-button" onClick={() => setAdding(false)}>Cancel</button>
         </form>
       )}
 
       {/* Edit Form */}
       {editing && (
-        <form onSubmit={handleUpdateSubmit} className="modules-form-edit">
-          <input className="modules-input module-id" type="text" name="module_id" value={updateForm.module_id} disabled />
-          <input className="modules-input module-name" type="text" name="module_name" value={updateForm.module_name} onChange={handleUpdateChange} required />
-          <input className="modules-input course-id" type="text" name="course_id" value={updateForm.course_id} readOnly />
-          <input className="modules-input course-name" type="text" name="course_name" value={updateForm.course_name} readOnly />
-          <button type="submit" className="modules-btn-submit">Update</button>
-          <button type="button" className="modules-btn-cancel" onClick={() => setEditing(false)}>Cancel</button>
+        <form onSubmit={handleUpdateSubmit} className="module-form-edit">
+          <input className="module-input module-id" type="text" name="module_id" value={updateForm.module_id} disabled />
+          <input className="module-input module-name" type="text" name="module_name" value={updateForm.module_name} onChange={handleUpdateChange} required />
+          <input className="module-input course-id" type="text" name="course_id" value={updateForm.course_id} readOnly />
+          <input className="module-input course-name" type="text" name="course_name" value={updateForm.course_name} readOnly />
+          <button type="submit" className="module-submit-button">Update</button>
+          <button type="button" className="module-cancel-button" onClick={() => setEditing(false)}>Cancel</button>
         </form>
       )}
 
       {/* Modules Table */}
       {modules.length === 0 ? (
-        <p className="modules-no-data">No modules found.</p>
+        <p className="module-no-data">No modules found.</p>
       ) : (
-        <table className="modules-table">
-          <thead>
-            <tr>
-              <th>Module ID</th>
-              <th>Module Name</th>
-              <th>Course ID</th>
-              <th>Course Name</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
+        <table className="module-table">
+        <thead>
+          <tr>
+            <th className="col-id">Module ID</th>
+            <th className="col-name">Module Name</th>
+            <th className="col-course-id">Course ID</th>
+            <th className="col-course-name">Course Name</th>
+            <th className="col-actions">Actions</th>
+          </tr>
+        </thead>
+
           <tbody>
             {modules.map(mod => (
               <tr key={mod.module_id}>
@@ -163,11 +178,9 @@ export default function Modules() {
                 <td>{mod.module_name}</td>
                 <td>{mod.course_id}</td>
                 <td>{mod.course_name}</td>
-                <td>
-                  <div className="modules-action-buttons">
-                    <button className="modules-btn-edit" onClick={() => startEdit(mod)}>Edit</button>
-                    <button className="modules-btn-delete" onClick={() => handleDelete(mod.module_id)}>Delete</button>
-                  </div>
+                <td className="module-action-buttons">
+                  <button className="module-edit-button" onClick={() => startEdit(mod)}>Edit</button>
+                  <button className="module-delete-button" onClick={() => handleDelete(mod.module_id)}>Delete</button>
                 </td>
               </tr>
             ))}

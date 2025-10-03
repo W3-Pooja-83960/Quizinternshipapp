@@ -1,9 +1,16 @@
 import React from "react";
 import "../Styles/home.css";
+import { useLocation } from "react-router-dom";
 
 const Home = () => {
+  const location = useLocation();
+  const welcomeMsg = location.state?.message || "Welcome Admin"; // fallback to "Admin"
+
   return (
     <div className="home-container">
+      {/* Display welcome message */}
+      <h2 className="welcome-message">{welcomeMsg}</h2>
+
       <h1>Welcome to Quiz App</h1>
       <p>This is the home page. Use the navbar to navigate to different sections.</p>
 
