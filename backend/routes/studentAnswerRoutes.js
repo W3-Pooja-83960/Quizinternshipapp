@@ -5,10 +5,13 @@ const { STUDENTS_ANS_TABLE } = require("../config");
 const {STUDENTS_QUIZ_TABLE} = require("../config");
 const { QUESTIONS_TABLE } = require("../config");
 const { STUDENTS_TABLE } = require("../config");
+const { checkAuthentication, checkRoles } = require("../middlewares/checkAuthentication");
 
+// Apply authentication to all routes
+router.use(checkAuthentication);
 
 // GET
-router.get("/stud-answers/:quiz_id/:student_id", (req, res) => {
+router.get("/stud-answers/:quiz_id/:student_id",checkRoles(["admin", "coordinator"]), (req, res) => {
     const { quiz_id, student_id } = req.params;
 
     const sql = ` SELECT s.student_id, s.firstName,s.lastName,s.prnNo,s.course_id,
@@ -30,7 +33,7 @@ router.get("/stud-answers/:quiz_id/:student_id", (req, res) => {
 
 
 //post-to add single answer
-router.post("/stud-ans/add-single-ans", (req, res) => {
+router.post("/stud-ans/add-single-ans",checkRoles(["admin"]), (req, res) => {
   const { attempt_id, questions_id, is_correct } = req.body;
 
   if (attempt_id === undefined || questions_id === undefined || is_correct === undefined) {
@@ -65,8 +68,9 @@ router.post("/stud-ans/add-single-ans", (req, res) => {
   });
 });
 
+
 //POST-to add multiple answers and update score
-router.post("/add-multiple-ans", (req, res) => {
+router.post("/add-multiple-ans",checkRoles(["admin"]), (req, res) => {
   const { answers } = req.body;
 
   if (!answers || !Array.isArray(answers) || answers.length === 0) {
@@ -104,7 +108,7 @@ router.post("/add-multiple-ans", (req, res) => {
 });
 
 //PUT- update existing answer and synchronize the score
-router.put("/update/:studentAnswer_id", (req, res) => {
+router.put("/update/:studentAnswer_id", checkRoles(["admin"]),(req, res) => {
   const { attempt_id, questions_id, is_correct } = req.body;
 const { studentAnswer_id } = req.params;
 

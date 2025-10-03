@@ -1,12 +1,16 @@
 const express = require("express");
 const { successResponse, errorResponse } = require("../utils/apiResponse");
-
-const { MODULE_TABLE } = require("../config/index");
+//const pool = require("../config/db");
+const { MODULE_TABLE } = require("../config");
 const pool = require("../config/db");
 const router = express.Router();
+const { checkAuthentication, checkRoles } = require("../middlewares/checkAuthentication");
 
+// Apply authentication to all routes
+router.use(checkAuthentication);
 
-router.get("/all-module", (request, response) => {
+//get all module
+router.get("/all-module", checkRoles(["admin", "coordinator"]),(request, response) => {
   const sql = `SELECT * FROM ${MODULE_TABLE}`;
 
   pool.query(sql, (error, results) => {
@@ -22,19 +26,21 @@ router.get("/all-module", (request, response) => {
   });
 });
 
-router.post('/addmodule',(request,response)=>{
-  const{module_name }=request.body
-  const statement=`insert into ${MODULE_TABLE}(module_name) values (?)`
-  pool.execute(statement,[module_name ],(error,result)=>{
+//add module
+router.post('/addmodule',checkRoles(["admin"]),(request,response)=>{
+  const{module_id,module_name }=request.body
+  const statement=`insert into ${MODULE_TABLE}(module_id,module_name) values (?,?)`
+  pool.execute(statement,[module_id,module_name ],(error,result)=>{
     if (error) {
       return response.send(errorResponse(error));
     }
     return response.send(successResponse(result));
 
+  });
+});
 
-  })
-})
-router.delete('/deletemodule/:module_id', (request, response) => {
+//delete module
+router.delete('/deletemodule/:module_id',checkRoles(["admin"]), (request, response) => {
   const {module_id} = request.params;
 
   const statement = `DELETE FROM ${MODULE_TABLE} WHERE module_id = ?`;
@@ -47,7 +53,8 @@ router.delete('/deletemodule/:module_id', (request, response) => {
   });
 });
 
-router.put('/updatemodule/:module_id', (request, response) => {
+//update module
+router.put('/updatemodule/:module_id', checkRoles(["admin"]),(request, response) => {
   const {module_id} = request.params;
 
 const{module_name}=request.body;
@@ -67,4 +74,6 @@ const{module_name}=request.body;
       
   });
 });
+
+
 module.exports = router;
