@@ -16,7 +16,7 @@ function Login() {
 
   try {
     const data = await loginServices.login(email, password);
-    console.log("Login API response:", data);  // 👈 debug
+    console.log("Login API response:", data);  
 
     if (data.status === "success") {
       const user = data.data?.user || data.user; // handle both response shapes
