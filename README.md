@@ -18,6 +18,9 @@ Tech Stack
 	 Frontend: React (Vite) / React Native
 	 Backend: Node.js, Express.js
 	 Database: MySQL
+	 
+	 Other Tools: Postman, git
+		
 
 ---------------------------------------------------------------------------------
 
@@ -60,4 +63,5 @@ Tech Stack
 	npx expo start
 	
 	install Expo Go from playstore to ur mobile
+	scan the QR code on Expo Go app
 
