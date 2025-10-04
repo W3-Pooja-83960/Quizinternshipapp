@@ -70,21 +70,7 @@ async function deleteQuiz(id) {
   }
 }
 
-// // Assign quiz to group
-// const assignQuiz = async (formData) => {
-//   try {
-//     const response = await axios.post(
-//       `${BASE_URL}/assigned_quiz/assign-quiz-to-group`,
-//       formData,
-//       { headers: getAuthHeaders() }
-//     );
-//     return response.data;
-//   } catch (error) {
-//     console.error("Error assigning quiz:", error.response?.data || error.message);
-//     throw error;
-//   }
-// };
-// Assign quiz to group
+
 export const sendQuizToGroup = async ({ quiz_id, group_name }) => {
   try {
     const token = localStorage.getItem("token");
