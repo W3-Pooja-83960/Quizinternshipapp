@@ -156,7 +156,7 @@ router.post("/send-quiz-to-group", checkRoles(["admin", "coordinator"]), async (
     // Check if quiz has questions
     const [quizCheck] = await promisePool.query(
 
-      "SELECT COUNT(*) AS count FROM ${ QUESTION_BANK_TABLE } WHERE quiz_id = ?",
+      `SELECT COUNT(*) AS count FROM ${ QUESTION_BANK_TABLE } WHERE quiz_id = ?`,
       [quiz_id]
     );
 
@@ -167,7 +167,7 @@ router.post("/send-quiz-to-group", checkRoles(["admin", "coordinator"]), async (
     // Check if already assigned
     const [existingAssignment] = await promisePool.query(
 
-      "SELECT * FROM ${ ASSIGNED_QUIZ_TABLE } WHERE quiz_id = ? AND group_name = ?",
+      `SELECT * FROM ${ ASSIGNED_QUIZ_TABLE } WHERE quiz_id = ? AND group_name = ?`,
       [quiz_id, group_name]
     );
 
@@ -178,7 +178,7 @@ router.post("/send-quiz-to-group", checkRoles(["admin", "coordinator"]), async (
     // Assign quiz
     await promisePool.query(
 
-      "INSERT INTO ${ ASSIGNED_QUIZ_TABLE } (quiz_id, group_name) VALUES (?, ?)",
+      `INSERT INTO ${ ASSIGNED_QUIZ_TABLE } (quiz_id, group_name) VALUES (?, ?)`,
       [quiz_id, group_name]
     );
 
