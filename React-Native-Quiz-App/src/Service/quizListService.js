@@ -1,7 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import BASE_URL from "../Service/api";
 
+
+const BASE_URL = "http://192.168.2.35:5000";
 
 // fetch quizzes assigned to a group
 export const fetchAssignedQuizzes = async (groupName) => {
