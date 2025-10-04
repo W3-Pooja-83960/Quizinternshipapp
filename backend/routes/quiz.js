@@ -122,7 +122,9 @@ router.put("/update-quiz/:quiz_id",checkRoles(["admin"]), (request, response) =>
 // Delete (soft delete) quiz
 router.delete("/delete-quiz/:quiz_id",checkRoles(["admin"]), (request, response) => {
   const { quiz_id } = request.params;
+
   const sql = `UPDATE ${QUIZ_TABLE} SET is_active = 0 WHERE quiz_id = ?`;
+
 
   pool.query(sql, [quiz_id], (error, result) => {
     if (error) {
@@ -153,6 +155,7 @@ router.post("/send-quiz-to-group", checkRoles(["admin", "coordinator"]), async (
 
     // Check if quiz has questions
     const [quizCheck] = await promisePool.query(
+
       "SELECT COUNT(*) AS count FROM ${ QUESTION_BANK_TABLE } WHERE quiz_id = ?",
       [quiz_id]
     );
@@ -163,6 +166,7 @@ router.post("/send-quiz-to-group", checkRoles(["admin", "coordinator"]), async (
 
     // Check if already assigned
     const [existingAssignment] = await promisePool.query(
+
       "SELECT * FROM ${ ASSIGNED_QUIZ_TABLE } WHERE quiz_id = ? AND group_name = ?",
       [quiz_id, group_name]
     );
@@ -173,6 +177,7 @@ router.post("/send-quiz-to-group", checkRoles(["admin", "coordinator"]), async (
 
     // Assign quiz
     await promisePool.query(
+
       "INSERT INTO ${ ASSIGNED_QUIZ_TABLE } (quiz_id, group_name) VALUES (?, ?)",
       [quiz_id, group_name]
     );
@@ -190,10 +195,10 @@ router.post("/send-quiz-to-group", checkRoles(["admin", "coordinator"]), async (
 // Get question count for all quizzes
 router.get("/question-counts", checkRoles(["admin", "coordinator"]), async (req, res) => {
   try {
-    const [rows] = await pool.query(`
-                                      SELECT quiz_id, COUNT(*) AS count
+    const [rows] = await pool.query(` SELECT quiz_id, COUNT(*) AS count
                                       FROM ${QUESTION_BANK_TABLE}
                                       GROUP BY quiz_id     `);
+
 
     // Return as object mapping quiz_id -> count
     const counts = {};

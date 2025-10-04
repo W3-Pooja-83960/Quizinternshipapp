@@ -1,4 +1,3 @@
-// Components/Logout.js
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -15,7 +14,7 @@ function Logout() {
     navigate("/login");
   }, [navigate]);
 
-  return null; // nothing to render
+  return null; 
 }
 
 export default Logout;
