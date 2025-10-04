@@ -20,6 +20,7 @@ module.exports={
     COURSE_MODULE_TABLE : "course_module",
     STUDENTS_GROUP_TABLE : "student_group",
     QUESTION_BANK_TABLE : "question_bank",
+    ASSIGNED_QUIZ_TABLE : "assigned_quiz",
 
     SECRET_KEY : "123abcd"
 

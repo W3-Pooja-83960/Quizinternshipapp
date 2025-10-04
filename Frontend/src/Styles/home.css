@@ -1,56 +1,70 @@
+body {
+  font-family: "Poppins", sans-serif;
+}
+
 .home-container {
-  padding: 2rem;
-  font-family: 'Poppins', sans-serif;
   text-align: center;
-}
-
-.home-container h1 {
-  font-size: 2rem;
-  margin-bottom: 1rem;
-  color: #007bff;
-}
-
-.home-container p {
-  font-size: 1.1rem;
-  margin-bottom: 2rem;
+  padding: 20px;
 }
 
 .home-cards {
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
-  flex-wrap: wrap;
-}
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 20px;
+  max-width: 900px;  
+  margin: 30px auto; 
 
 .card {
-  background-color: #f2f2f2;
-  padding: 1.5rem 2rem;
+  background: #979ed3;
   border-radius: 10px;
-  width: 200px;
-  transition: transform 0.3s, box-shadow 0.3s;
-  cursor: pointer;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: transform 0.3s;
 }
 
 .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  transform: scale(1.05);
+  background: #eef3ff;
 }
 
+body {
+  font-family: "Poppins", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f6f8; 
+}
+
+/* Welcome message */
+.welcome-message {
+  font-size: 24px;
+  font-weight: 600;
+  color: #ff6b6b; 
+}
+
+/* Main heading */
+h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1e3a8a; 
+}
+
+/* Paragraphs */
+p {
+  font-size: 16px;
+  font-weight: 400;
+  color: #374151; 
+  line-height: 1.6;
+}
+
+/* Card text */
 .card h3 {
-  color: #007bff;
-  margin-bottom: 0.5rem;
+  font-size: 20px;
+  font-weight: 600;
+  color: black;
 }
 
 .card p {
-  font-size: 0.95rem;
-  color: #333;
-}
-.welcome-message {
-  background-color: #dff0d8;
-  color: #3c763d;
-  padding: 10px 15px;
-  border-radius: 5px;
-  margin-bottom: 15px;
-  font-weight: bold;
-  text-align: center;
+  font-size: 14px;
+  font-weight: 400;
+  color: black; 
 }
