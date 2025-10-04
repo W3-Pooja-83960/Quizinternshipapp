@@ -74,6 +74,7 @@ router.put("/update-student/:student_id", checkRoles(["admin"]),(request, respon
     WHERE student_id = ?`;
 
   pool.execute(sql, [ prnNo, course_id, batch_id, group_name, student_id], (error, result) => {
+
     if (error) {
       return response.send(errorResponse(error));
     }
@@ -104,9 +105,6 @@ router.delete("/delete-student/:student_id",checkRoles(["admin"]), (request, res
     return response.send(successResponse("Student deleted successfully"));
   });
 });
-
-
-
 
 
 module.exports = router;
