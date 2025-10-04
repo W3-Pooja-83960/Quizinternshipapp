@@ -99,7 +99,7 @@ router.put("/update-course/:id",checkRoles(["admin", "coordinator"]), (req, res)
 });
 
 
-// ✅ Delete batch
+// Delete batch
 router.delete("/delete-course/:id",checkRoles(["admin", "coordinator"]), (req, res) => {
   const { id } = req.params;
 
