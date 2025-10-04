@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 
 const Home = () => {
   const location = useLocation();
-  const welcomeMsg = location.state?.message || "Welcome Admin"; // fallback to "Admin"
+  const welcomeMsg = location.state?.message || "Welcome Admin"; 
 
   return (
     <div className="home-container">
@@ -16,10 +16,31 @@ const Home = () => {
 
       <div className="home-cards">
         <div className="card">
-          <h3>Batches</h3>
-          <p>View all batches and their details.</p>
+          <h3>DAC</h3>
+          <p>Post Graduate Diploma In Advanced Computing</p>
         </div>
+
         <div className="card">
+          <h3>DMC</h3>
+          <p>Post Graduate Diploma in Mobile Computing</p>
+        </div>
+
+        <div className="card">
+          <h3>DBDA</h3>
+          <p>Post Graduate Diploma in Big Data Analytics</p>
+        </div>
+
+        <div className="card">
+          <h3>DITISS</h3>
+          <p>Post Graduate Diploma in IT Infrastructure, Systems and Security</p>
+        </div>
+
+        <div className="card">
+          <h3>DESD</h3>
+          <p>Post Graduate Diploma in Embedded Systems Design</p>
+        </div>
+
+          <div className="card">
           <h3>About</h3>
           <p>Learn more about this application.</p>
         </div>
