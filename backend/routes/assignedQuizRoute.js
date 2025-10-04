@@ -131,7 +131,7 @@ router.post("/submit-answers", checkAuthentication, async (req, res) => {
 });
 ////////////////////////////////////////////////////////////////////////////////
 
-// routes/resultRoutes.js or wherever your routes are
+// student results 
 router.get("/student-results", checkAuthentication, (req, res) => {
   const student_id = req.user.userId; 
 

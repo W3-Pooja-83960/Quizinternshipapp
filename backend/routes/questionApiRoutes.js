@@ -146,22 +146,6 @@ function normalizeAndValidateRows(rows, quizIdFromQuery = null) {
   });
 }
 
-//------------------------------to get questions count per quiz--------------------------------/
-// GET /questions/:quiz_id  --> get all questions for a quiz
 
-router.get("/by-quiz/:quiz_id", (req, res) => {
-  const { quiz_id } = req.params;
-  console.log("Fetching questions for quiz_id:", quiz_id);
-
-  const sql = `SELECT * FROM ${QUESTION_BANK_TABLE} WHERE quiz_id = ?`;
-
-  pool.query(sql, [quiz_id], (err, rows) => {
-    if (err) {
-      console.error("Error fetching questions:", err);
-      return res.status(500).json({ message: "Error fetching questions" });
-    }
-    res.json(rows); // send the array of questions
-  });
-});
 
 module.exports = router;

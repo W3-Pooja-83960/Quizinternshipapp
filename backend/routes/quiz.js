@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../config/db"); 
-const {MODULE_TABLE, STAFF_TABLE, QUIZ_TABLE, COURSE_TABLE } = require("../config");
+const {MODULE_TABLE, STAFF_TABLE, QUIZ_TABLE, COURSE_TABLE, QUESTION_BANK_TABLE , ASSIGNED_QUIZ_TABLE } = require("../config");
 const { successResponse, errorResponse } = require("../utils/apiResponse");
 const { checkAuthentication, checkRoles } = require("../middlewares/checkAuthentication");
 
@@ -123,7 +123,7 @@ router.put("/update-quiz/:quiz_id",checkRoles(["admin"]), (request, response) =>
 // Delete (soft delete) quiz
 router.delete("/delete-quiz/:quiz_id",checkRoles(["admin"]), (request, response) => {
   const { quiz_id } = request.params;
-  const sql = `UPDATE quiz SET is_active = 0 WHERE quiz_id = ?`;
+  const sql = `UPDATE ${ QUIZ_TABLE } SET is_active = 0 WHERE quiz_id = ?`;
 
   pool.query(sql, [quiz_id], (error, result) => {
     if (error) {
@@ -155,7 +155,7 @@ router.post("/send-quiz-to-group", checkRoles(["admin", "coordinator"]), async (
 
     // Check if quiz has questions
     const [quizCheck] = await promisePool.query(
-      "SELECT COUNT(*) AS count FROM question_bank WHERE quiz_id = ?",
+      `SELECT COUNT(*) AS count FROM ${ QUESTION_BANK_TABLE } WHERE quiz_id = ?`,
       [quiz_id]
     );
 
@@ -165,7 +165,7 @@ router.post("/send-quiz-to-group", checkRoles(["admin", "coordinator"]), async (
 
     // Check if already assigned
     const [existingAssignment] = await promisePool.query(
-      "SELECT * FROM assigned_quiz WHERE quiz_id = ? AND group_name = ?",
+      `SELECT * FROM ${ ASSIGNED_QUIZ_TABLE } WHERE quiz_id = ? AND group_name = ?` ,
       [quiz_id, group_name]
     );
 
@@ -175,7 +175,7 @@ router.post("/send-quiz-to-group", checkRoles(["admin", "coordinator"]), async (
 
     // Assign quiz
     await promisePool.query(
-      "INSERT INTO assigned_quiz (quiz_id, group_name) VALUES (?, ?)",
+      `INSERT INTO ${ ASSIGNED_QUIZ_TABLE } (quiz_id, group_name) VALUES (?, ?)`,
       [quiz_id, group_name]
     );
 
@@ -194,7 +194,7 @@ router.get("/question-counts", checkRoles(["admin", "coordinator"]), async (req,
   try {
     const [rows] = await pool.query(`
       SELECT quiz_id, COUNT(*) AS count
-      FROM question_bank
+      FROM ${ QUESTION_BANK_TABLE }
       GROUP BY quiz_id
     `);
 
@@ -219,8 +219,8 @@ router.get("/assigned-quizzes/:group_name", checkAuthentication, async (req, res
       .promise()
       .query(
         `SELECT q.* 
-         FROM quiz q
-         JOIN assigned_quiz a ON q.quiz_id = a.quiz_id
+         FROM ${ QUIZ_TABLE } q
+         JOIN ${ ASSIGNED_QUIZ_TABLE } a ON q.quiz_id = a.quiz_id
          WHERE a.group_name = ? AND q.is_active = 1`,
         [group_name]
       );
