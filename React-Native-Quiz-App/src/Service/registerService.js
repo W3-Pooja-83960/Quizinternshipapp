@@ -1,7 +1,8 @@
-// src/Service/registerService.js
-import axios from "axios";
-import { BASE_URL } from "../Service/api";
 
+import axios from "axios";
+
+
+const BASE_URL = "http://192.168.2.35:5000";
 
 export const registerStudent = async (firstName, lastName, email, password) => {
   try {
