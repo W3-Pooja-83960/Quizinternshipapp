@@ -11,9 +11,9 @@ const courseRoutes = require("./routes/course");
 const studentsQuizRoutes = require("./routes/studentQuizRoutes");
 const studentAnswersRoutes = require("./routes/studentAnswerRoutes");
 const admin_Routes = require("./routes/admin_Routes");
-const assignedQuiz = require("./routes/assignedQuizRoute");
+const assignedQuiz= require("./routes/assignedQuizRoute");
 const moduleRoutes = require("./routes/moduleRoutes");
-const batch_courseRoutes = require("./routes/batchcourseRoutes");
+const batch_courseRoutes = require("./routes/batch_courseRoutes");
 const studentsRoutes = require("./routes/studentsRoutes");
 const course_moduleRoutes = require("./routes/course_moduleRoutes");
 const studentsGroupRoutes = require("./routes/studentGroup");
@@ -21,6 +21,8 @@ const staffRoutes = require("./routes/staff");
 const quizRoutes = require("./routes/quiz");
 const userRoutes = require("./routes/user_Routes");
 const questionApiRoutes = require("./routes/questionApiRoutes");
+const resultRoute = require("./routes/resultRoute");
+
 
 
 // middlewares
@@ -29,6 +31,7 @@ app.use(cors());
 
 // Public routes (NO token required)
 app.use("/user", userRoutes);
+
 
 // Protected routes (token required)
 app.use(checkAuthentication);
@@ -58,6 +61,7 @@ app.use("/staff",staffRoutes);
 app.use("/quiz", quizRoutes);
 app.use("/questionApi",questionApiRoutes);
 app.use("/assignedQuiz",assignedQuiz);
+app.use("/students-results",resultRoute);
 
 
 
@@ -70,7 +74,6 @@ app.use("/routeNotFound",routeNotFound);
 app.listen(PORT, () => {
   console.log(`Server started at http://localhost:${PORT}`);
 });
-
 
 
 
