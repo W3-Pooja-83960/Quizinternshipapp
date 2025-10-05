@@ -13,6 +13,7 @@ import Staff from "./Pages/Staff";
 import Login from "./Components/Login";
 import Students from "./Pages/Student";
 import Modules from "./Pages/Modules";
+import Results from "./Pages/Results";
 
 
 const App = () => {
@@ -35,7 +36,8 @@ const App = () => {
         <Route path="/questions/:quiz_id" element={<Questions />} />
         <Route path="/course" element={<Course />} />
         <Route path="/staff" element={<Staff />} />
-        <Route path="/students" element={<Students />} />
+        <Route path="/students" element={<Students />} />         
+        <Route path="/results" element={<Results />} />
         <Route path="*" element={<Login />} />
       </Routes>
       

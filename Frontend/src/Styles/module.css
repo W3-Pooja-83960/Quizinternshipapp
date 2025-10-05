@@ -194,3 +194,43 @@
 .module-delete-button:hover {
   background-color: #d32f2f;
 }
+
+/* ================= Pagination ================= */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center; /* vertically center buttons and text */
+  margin-top: 24px; /* increase space from table */
+  gap: 12px;
+}
+
+.pagination span {
+  margin-top: 4px; /* move text slightly down */
+  font-size: 14px;
+  color: #333;
+}
+
+.pagination button {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+.pagination button:hover {
+  background-color: #eee;
+}
+
+.pagination button.active {
+  background-color: #5346a0;
+  color: white;
+  font-weight: bold;
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
