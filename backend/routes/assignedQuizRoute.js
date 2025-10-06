@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../config/db");
-const {  STUDENTS_QUIZ_TABLE,STUDENTS_ANS_TABLE,QUESTION_BANK_TABLE ,STUDENTS_GROUP_TABLE,QUIZ_QUESTIONS_TABLE,QUIZ_TABLE, STAFF_TABLE } = require("../config");
-const { checkAuthentication, checkRoles } = require("../middlewares/checkAuthentication");
 const { successResponse, errorResponse } = require("../utils/apiResponse");
+const {  STUDENTS_QUIZ_TABLE,QUIZ_TABLE, STUDENTS_ANS_TABLE,QUESTION_BANK_TABLE , MODULE_TABLE } = require("../config");
+const { checkAuthentication, checkRoles } = require("../middlewares/checkAuthentication");
 
 // Apply authentication to all routes
 router.use(checkAuthentication);
@@ -46,7 +46,7 @@ router.post("/start-attempt",(req, res) => {
   });
 });
 
-// Submit answers 
+// Submit answers route
 router.post("/submit-answers", checkAuthentication, async (req, res) => {
   const { attempt_id, answers, quiz_id } = req.body;
   const student_id = req.user.userId;
@@ -129,57 +129,9 @@ router.post("/submit-answers", checkAuthentication, async (req, res) => {
     return res.status(500).json({ error: err.message || err });
   }
 });
+////////////////////////////////////////////////////////////////////////////////
 
-
-
-// create quiz (admin side)
-router.post("/assign-quiz",checkRoles(["admin", "coordinator"]), (req, res) => {
-  const { quiz_id, selected_questions, group_id } = req.body;
-
-  if (!quiz_id || !selected_questions?.length || !group_id) {
-    return res.status(400).json({ status: "error", message: "quiz_id, selected_questions, group_id required" });
-  }
-
-  //  Get staff info from quiz
-  pool.query(`SELECT staff_id FROM ${QUIZ_TABLE} WHERE quiz_id = ?`, [quiz_id], (err, quizResult) => {
-    if (err || !quizResult.length) return res.status(404).json({ status: "error", message: "Quiz not found" });
-
-    const staff_id = quizResult[0].staff_id;
-
-    //  Get staff name
-    pool.query(`SELECT firstName, lastName FROM ${ STAFF_TABLE } WHERE staff_id = ?`, [staff_id], (err, staffResult) => {
-      const firstName = staffResult?.[0]?.firstName || "";
-      const lastName = staffResult?.[0]?.lastName || "";
-
-      //  Assign questions to quiz
-      const questionValues = selected_questions.map(q => [quiz_id, q]);
-      pool.query(`INSERT IGNORE INTO ${QUIZ_QUESTIONS_TABLE} (quiz_id, question_id) VALUES ?`, [questionValues], (err) => {
-        if (err) return res.status(500).json({ status: "error", message: err.sqlMessage });
-
-        //  Assign quiz to all students in the group
-        pool.query(`SELECT student_id FROM ${STUDENTS_GROUP_TABLE} WHERE group_id = ?`, [group_id], (err, students) => {
-          if (err || !students.length) return res.status(404).json({ status: "error", message: "No students found in this group" });
-
-          const studentValues = students.map(s => [s.student_id, quiz_id]);
-          pool.query(`INSERT IGNORE INTO ${STUDENTS_QUIZ_TABLE} (student_id, quiz_id) VALUES ?`, [studentValues], (err) => {
-            if (err) return res.status(500).json({ status: "error", message: err.sqlMessage });
-
-            // Success response
-            res.json({
-              status: "success",
-              message: `${selected_questions.length} questions selected. Quiz assigned to group ${group_id} by staff ${firstName} ${lastName} (ID: ${staff_id})`,
-              assigned_by: { staff_id, firstName, lastName }
-            });
-          });
-        });
-      });
-    });
-  });
-});
-
-
-// student result(react-native app side)
-
+// routes/resultRoutes.js 
 router.get("/student-results", checkAuthentication, (req, res) => {
   const student_id = req.user.userId; 
 
@@ -204,7 +156,10 @@ router.get("/student-results", checkAuthentication, (req, res) => {
 });
 
 
-// Get most recent quiz score for logged-in student(react-native app=resultTab)
+
+
+
+// Get most recent quiz score for logged-in student
 router.get("/recent-score", checkAuthentication, (req, res) => {
   const student_id = req.user.userId;
 

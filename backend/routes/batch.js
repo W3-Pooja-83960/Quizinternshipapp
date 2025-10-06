@@ -89,7 +89,4 @@ router.delete("/delete-batch/:id", checkRoles(["admin"]), (req, res) => {
   });
 });
 
-
-
 module.exports = router;
-
