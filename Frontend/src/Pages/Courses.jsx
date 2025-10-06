@@ -6,15 +6,23 @@ export default function Courses() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Add Course Form state
+  // Add & Update Form states
   const [addForm, setAddForm] = useState({ id: "", name: "" });
   const [updateForm, setUpdateForm] = useState({ id: "", name: "" });
 
   const [adding, setAdding] = useState(false);
   const [editing, setEditing] = useState(false);
 
-  const [message, setMessage] = useState({ type: "", text: "" });
+  // Notification state
+  const [message, setMessage] = useState({ type: "", text: "", visible: false });
 
+  // ===== Helpers =====
+  const showMessage = (type, text, duration = 3000) => {
+    setMessage({ type, text, visible: true });
+    setTimeout(() => setMessage({ type: "", text: "", visible: false }), duration);
+  };
+
+  // ===== Load Courses =====
   useEffect(() => {
     loadCourses();
   }, []);
@@ -26,7 +34,7 @@ export default function Courses() {
     setLoading(false);
   };
 
-  // ===== Add Course Handlers =====
+  // ===== Add Course =====
   const handleAddChange = (e) => {
     setAddForm({ ...addForm, [e.target.name]: e.target.value });
   };
@@ -34,17 +42,27 @@ export default function Courses() {
   const handleAddSubmit = async (e) => {
     e.preventDefault();
     try {
-      await courseService.addCourse(addForm);
+      const payload = { course_id: addForm.id, course_name: addForm.name };
+      await courseService.addCourse(payload);
+
+      // Append new course to state
+      setCourses((prev) => [...prev, payload]);
+
       setAddForm({ id: "", name: "" });
       setAdding(false);
-      setMessage({ type: "success", text: "Course added successfully!" });
-      loadCourses();
-    } catch {
-      setMessage({ type: "error", text: "Failed to add course!" });
+      showMessage("success", "Course added successfully!");
+    } catch (error) {
+      console.error(error);
+      showMessage("error", "Failed to add course!");
     }
   };
 
-  // ===== Update Course Handlers =====
+  // ===== Update Course =====
+  const startEdit = (course) => {
+    setUpdateForm({ id: course.course_id, name: course.course_name });
+    setEditing(true);
+  };
+
   const handleUpdateChange = (e) => {
     setUpdateForm({ ...updateForm, [e.target.name]: e.target.value });
   };
@@ -52,32 +70,37 @@ export default function Courses() {
   const handleUpdateSubmit = async (e) => {
     e.preventDefault();
     try {
-      await courseService.updateCourse(updateForm.id, updateForm);
+      const payload = { course_name: updateForm.name };
+      await courseService.updateCourse(updateForm.id, payload);
+
+      // Update course in state
+      setCourses((prev) =>
+        prev.map((c) =>
+          c.course_id === updateForm.id ? { ...c, course_name: updateForm.name } : c
+        )
+      );
+
       setEditing(false);
       setUpdateForm({ id: "", name: "" });
-      setMessage({ type: "success", text: "Course updated successfully!" });
-      loadCourses();
-    } catch {
-      setMessage({ type: "error", text: "Failed to update course!" });
+      showMessage("success", "Course updated successfully!");
+    } catch (error) {
+      console.error(error);
+      showMessage("error", "Failed to update course!");
     }
-  };
-
-  const startEdit = (course) => {
-    setUpdateForm({ id: course.course_id, name: course.course_name });
-    setEditing(true);
   };
 
   // ===== Delete Course =====
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm("Are you sure you want to delete this course?");
-    if (confirmDelete) {
-      try {
-        await courseService.deleteCourse(id);
-        setMessage({ type: "success", text: "Course deleted successfully!" });
-        loadCourses();
-      } catch {
-        setMessage({ type: "error", text: "Failed to delete course!" });
-      }
+    if (!confirmDelete) return;
+
+    try {
+      await courseService.deleteCourse(id);
+      setCourses((prev) => prev.filter((c) => c.course_id !== id));
+      showMessage("success", "Course deleted successfully!");
+    } catch (error) {
+      console.error(error);
+      showMessage("error", "Failed to delete course!");
     }
   };
 
@@ -88,8 +111,14 @@ export default function Courses() {
       <h2>Course Management</h2>
 
       {/* Notification */}
-      {message.text && (
-        <div className={`course-message ${message.type}`}>{message.text}</div>
+      {message.visible && (
+        <div
+          className={`course-message course-${message.type} ${
+            message.visible ? "show" : ""
+          }`}
+        >
+          {message.text}
+        </div>
       )}
 
       {/* Add Button */}
@@ -103,7 +132,7 @@ export default function Courses() {
       {adding && (
         <form onSubmit={handleAddSubmit} className="course-form">
           <input
-            type="number"
+            type="text"
             name="id"
             placeholder="Course ID"
             value={addForm.id}
@@ -128,7 +157,7 @@ export default function Courses() {
       {/* Update Form */}
       {editing && (
         <form onSubmit={handleUpdateSubmit} className="course-form">
-          <input type="number" name="id" value={updateForm.id} disabled />
+          <input type="text" name="id" value={updateForm.id} disabled />
           <input
             type="text"
             name="name"
@@ -161,18 +190,8 @@ export default function Courses() {
                 <td>{course.course_id}</td>
                 <td>{course.course_name}</td>
                 <td style={{ display: "flex", gap: "12px", justifyContent: "center" }}>
-                  <button
-                    className="course-edit-button"
-                    onClick={() => startEdit(course)}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="course-delete-button"
-                    onClick={() => handleDelete(course.course_id)}
-                  >
-                    Delete
-                  </button>
+                  <button className="course-edit-button" onClick={() => startEdit(course)}>Edit</button>
+                  <button className="course-delete-button" onClick={() => handleDelete(course.course_id)}>Delete</button>
                 </td>
               </tr>
             ))}

@@ -39,13 +39,6 @@ export default function Batches() {
     return `${day}-${month}-${year}`;
   };
 
-  const parseDate = (dateString) => {
-    if (!dateString) return "";
-    const [day, month, year] = dateString.split("-");
-    if (!day || !month || !year) return dateString;
-    return `${year}-${month}-${day}`;
-  };
-
   const showMessage = (type, text, duration = 3000) => {
     setMessage({ type, text, visible: true });
     setTimeout(() => {
@@ -60,13 +53,10 @@ export default function Batches() {
 
   const loadBatches = async () => {
     setLoading(true);
-    const result = await batchServices.fetchAllBatches();
-    const formatted = (result || []).map((b) => ({
-      ...b,
-      start_date: formatDate(b.start_date),
-      end_date: formatDate(b.end_date),
-    }));
-    setBatches(formatted);
+    let result = await batchServices.fetchAllBatches();
+    // Sort batches ascending by batch_id (oldest first)
+    result = result.sort((a, b) => a.batch_id.localeCompare(b.batch_id));
+    setBatches(result || []);
     setLoading(false);
   };
 
@@ -78,28 +68,28 @@ export default function Batches() {
   const handleAddSubmit = async (e) => {
     e.preventDefault();
     try {
-      const payload = {
-        ...addForm,
-        start_date: parseDate(addForm.start_date),
-        end_date: parseDate(addForm.end_date),
-      };
+      const payload = { ...addForm };
 
+      // Call API
       const newBatch = await batchServices.addBatch(payload);
 
-      // Append new batch at end
-      setBatches((prev) => [
-        ...prev,
-        {
-          ...newBatch,
-          start_date: formatDate(payload.start_date),
-          end_date: formatDate(payload.end_date),
-        },
-      ]);
+      // Ensure new batch matches table structure
+      const formattedBatch = {
+        batch_id: newBatch.batch_id || payload.batch_id,
+        batch_name: newBatch.batch_name || payload.batch_name,
+        start_date: newBatch.start_date || payload.start_date,
+        end_date: newBatch.end_date || payload.end_date,
+      };
 
+      // Append new batch at the end
+      setBatches((prev) => [...prev, formattedBatch]);
+
+      // Reset form
       setAddForm({ batch_id: "", batch_name: "", start_date: "", end_date: "" });
       setAdding(false);
       showMessage("success", "Batch added successfully!");
-    } catch {
+    } catch (error) {
+      console.error(error);
       showMessage("error", "Failed to add batch!");
     }
   };
@@ -112,27 +102,12 @@ export default function Batches() {
   const handleUpdateSubmit = async (e) => {
     e.preventDefault();
     try {
-      const payload = {
-        ...updateForm,
-        start_date: parseDate(updateForm.start_date),
-        end_date: parseDate(updateForm.end_date),
-      };
-
-      await batchServices.updateBatch(updateForm.batch_id, payload);
-
-      // Update in state directly
+      await batchServices.updateBatch(updateForm.batch_id, updateForm);
       setBatches((prev) =>
         prev.map((b) =>
-          b.batch_id === updateForm.batch_id
-            ? {
-                ...payload,
-                start_date: formatDate(payload.start_date),
-                end_date: formatDate(payload.end_date),
-              }
-            : b
+          b.batch_id === updateForm.batch_id ? updateForm : b
         )
       );
-
       setEditing(false);
       setUpdateForm({ batch_id: "", batch_name: "", start_date: "", end_date: "" });
       showMessage("success", "Batch updated successfully!");
@@ -142,12 +117,7 @@ export default function Batches() {
   };
 
   const startEdit = (batch) => {
-    setUpdateForm({
-      batch_id: batch.batch_id,
-      batch_name: batch.batch_name,
-      start_date: batch.start_date,
-      end_date: batch.end_date,
-    });
+    setUpdateForm(batch);
     setEditing(true);
   };
 
@@ -157,10 +127,7 @@ export default function Batches() {
     if (confirmDelete) {
       try {
         await batchServices.deleteBatch(id);
-
-        // Remove from local state
         setBatches((prev) => prev.filter((b) => b.batch_id !== id));
-
         showMessage("success", "Batch deleted successfully!");
       } catch {
         showMessage("error", "Failed to delete batch!");
@@ -175,7 +142,7 @@ export default function Batches() {
     <div className="batch-table-container">
       <h2>Batch Management</h2>
 
-      {/* Popup Notification */}
+      {/* Notification */}
       {message.text && (
         <div
           className={`batch-message batch-${message.type} ${
@@ -193,95 +160,99 @@ export default function Batches() {
         </button>
       )}
 
-      {/* Add Batch Form */}
+      {/* Add Form */}
       {adding && (
         <form onSubmit={handleAddSubmit} className="batch-form">
-          <input
-            type="text"
-            name="batch_id"
-            placeholder="Batch ID"
-            value={addForm.batch_id}
-            onChange={handleAddChange}
-            required
-          />
-          <input
-            type="text"
-            name="batch_name"
-            placeholder="Batch Name"
-            value={addForm.batch_name}
-            onChange={handleAddChange}
-            required
-          />
-          <input
-            type="text"
-            name="start_date"
-            placeholder="DD-MM-YYYY"
-            value={addForm.start_date}
-            onChange={handleAddChange}
-            required
-          />
-          <input
-            type="text"
-            name="end_date"
-            placeholder="DD-MM-YYYY"
-            value={addForm.end_date}
-            onChange={handleAddChange}
-            required
-          />
-          <button type="submit" className="batch-submit-button">
-            Add Batch
-          </button>
-          <button
-            type="button"
-            className="batch-cancel-button"
-            onClick={() => setAdding(false)}
-          >
-            Cancel
-          </button>
+          <div className="batch-input-row">
+            <input
+              type="text"
+              name="batch_id"
+              placeholder="Batch ID"
+              value={addForm.batch_id}
+              onChange={handleAddChange}
+              required
+            />
+            <input
+              type="text"
+              name="batch_name"
+              placeholder="Batch Name"
+              value={addForm.batch_name}
+              onChange={handleAddChange}
+              required
+            />
+            <input
+              type="date"
+              name="start_date"
+              value={addForm.start_date}
+              onChange={handleAddChange}
+              required
+            />
+            <input
+              type="date"
+              name="end_date"
+              value={addForm.end_date}
+              onChange={handleAddChange}
+              required
+            />
+          </div>
+          <div className="batch-button-row">
+            <button type="submit" className="batch-submit-button">
+              Add Batch
+            </button>
+            <button
+              type="button"
+              className="batch-cancel-button"
+              onClick={() => setAdding(false)}
+            >
+              Cancel
+            </button>
+          </div>
         </form>
       )}
 
-      {/* Update Batch Form */}
+      {/* Update Form */}
       {editing && (
         <form onSubmit={handleUpdateSubmit} className="batch-form">
-          <input type="text" name="batch_id" value={updateForm.batch_id} disabled />
-          <input
-            type="text"
-            name="batch_name"
-            value={updateForm.batch_name}
-            onChange={handleUpdateChange}
-            required
-          />
-          <input
-            type="text"
-            name="start_date"
-            placeholder="DD-MM-YYYY"
-            value={updateForm.start_date}
-            onChange={handleUpdateChange}
-            required
-          />
-          <input
-            type="text"
-            name="end_date"
-            placeholder="DD-MM-YYYY"
-            value={updateForm.end_date}
-            onChange={handleUpdateChange}
-            required
-          />
-          <button type="submit" className="batch-submit-button">
-            Update Batch
-          </button>
-          <button
-            type="button"
-            className="batch-cancel-button"
-            onClick={() => setEditing(false)}
-          >
-            Cancel
-          </button>
+          <div className="batch-input-row">
+            <input type="text" name="batch_id" value={updateForm.batch_id} disabled />
+            <input
+              type="text"
+              name="batch_name"
+              value={updateForm.batch_name}
+              onChange={handleUpdateChange}
+              required
+            />
+            <input
+              type="date"
+              name="start_date"
+              value={updateForm.start_date}
+              onChange={handleUpdateChange}
+              required
+            />
+            <input
+              type="date"
+              name="end_date"
+              value={updateForm.end_date}
+              onChange={handleUpdateChange}
+              required
+            />
+          </div>
+          <div className="batch-button-row">
+            <button type="submit" className="batch-submit-button">
+              Update Batch
+            </button>
+            <button
+              type="button"
+              className="batch-cancel-button"
+              onClick={() => setEditing(false)}
+            >
+              Cancel
+            </button>
+          </div>
         </form>
       )}
 
-      {/* Batches Table */}
+      {/* Table */}
       {batches.length === 0 ? (
         <p>No batches found.</p>
       ) : (
@@ -300,12 +271,10 @@ export default function Batches() {
               <tr key={batch.batch_id}>
                 <td>{batch.batch_id}</td>
                 <td>{batch.batch_name}</td>
-                <td>{batch.start_date}</td>
-                <td>{batch.end_date}</td>
+                <td>{formatDate(batch.start_date)}</td>
+                <td>{formatDate(batch.end_date)}</td>
                 <td>
-                  <div
-                    style={{ display: "flex", justifyContent: "center", gap: "12px" }}
-                  >
+                  <div style={{ display: "flex", justifyContent: "center", gap: "12px" }}>
                     <button
                       className="batch-edit-button"
                       onClick={() => startEdit(batch)}

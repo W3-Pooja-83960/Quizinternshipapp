@@ -1,5 +1,5 @@
-/* Container */
-.results-container {
+/* Batch Container */
+.batch-table-container {
   max-width: 1000px;
   margin: 40px auto;
   padding: 20px;
@@ -7,18 +7,17 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #ffffff;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  text-align: center;
 }
 
 /* Heading */
-.results-container h2 {
+.batch-table-container h2 {
   text-align: center;
   margin-bottom: 20px;
   color: #333;
 }
 
 /* Notification */
-.results-message {
+.batch-message {
   position: fixed;
   top: -80px;
   left: 50%;
@@ -34,126 +33,147 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-.results-message.show {
+.batch-message.show {
   top: 100px;
   opacity: 1;
 }
 
-.results-success {
-  background-color: #4caf50; /* green */
+.batch-success {
+  background-color: #4caf50;
 }
 
-.results-error {
-  background-color: #f44336; /* red */
+.batch-error {
+  background-color: #f44336;
 }
 
-/* Filters */
-.results-filters {
+/* Form Inputs */
+.batch-form .batch-input-row {
   display: flex;
-  gap: 12px;
-  margin-bottom: 20px;
-  justify-content: center;
-  flex-wrap: wrap;
+  gap: 10px;
+  flex-wrap: wrap; /* wraps on smaller screens */
+  margin-bottom: 10px;
 }
 
-.results-filters select,
-.results-filters input {
-  padding: 8px 12px;
+.batch-form .batch-input-row input[type="text"],
+.batch-form .batch-input-row input[type="date"] {
+  flex: 1; /* equal width */
+  min-width: 120px; /* don't shrink too much */
+  padding: 6px 8px; /* smaller padding */
+  font-size: 14px;
+  margin: 0; /* remove previous margins for row layout */
   border: 1px solid #ccc;
   border-radius: 6px;
-  min-width: 160px;
-  font-size: 14px;
+  box-sizing: border-box;
 }
 
-.results-filters button {
-  padding: 8px 16px;
+.batch-form .batch-input-row input[type="text"]:focus,
+.batch-form .batch-input-row input[type="date"]:focus {
+  border-color: #5346a0; 
+  outline: none;
+}
+
+/* Form Buttons */
+.batch-form .batch-button-row {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+}
+
+.batch-submit-button,
+.batch-cancel-button,
+.batch-add-button,
+.batch-edit-button,
+.batch-delete-button {
+  padding: 8px 14px;
   border: none;
   border-radius: 6px;
-  font-size: 14px;
-  font-weight: bold;
   cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
   transition: background-color 0.3s ease;
 }
 
-.results-filters button:nth-child(4), /* Filter button */
-.results-filters button[type="submit"] {
+.batch-submit-button,
+.batch-add-button {
   background-color: #4caf50;
   color: white;
 }
 
-.results-filters button:nth-child(4):hover,
-.results-filters button[type="submit"]:hover {
+.batch-submit-button:hover,
+.batch-add-button:hover {
   background-color: #45a049;
 }
 
-.results-filters button:nth-child(5), /* Reset button */
-.results-filters button[type="button"] {
+.batch-cancel-button {
   background-color: #f44336;
   color: white;
 }
 
-.results-filters button:nth-child(5):hover,
-.results-filters button[type="button"]:hover {
+.batch-cancel-button:hover {
+  background-color: #d32f2f;
+}
+
+.batch-edit-button {
+  background-color: #5346a0;
+  color: white;
+}
+
+.batch-edit-button:hover {
+  background-color: #3f3585;
+}
+
+.batch-delete-button {
+  background-color: #f44336;
+  color: white;
+}
+
+.batch-delete-button:hover {
   background-color: #d32f2f;
 }
 
 /* Table */
-.results-table {
+.batch-table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
 }
 
-.results-table th,
-.results-table td {
+.batch-table th,
+.batch-table td {
   padding: 8px 12px;
   border: 1px solid #ddd;
 }
 
-.results-table th {
-  background-color: #5346a0; 
+.batch-table th {
+  background-color: #5346a0;
   color: white;
   font-weight: bold;
   text-align: center;
 }
 
-.results-table td {
-  text-align: left;
+.batch-table td {
+  text-align: center;
 }
 
-.results-table tr:nth-child(even) {
+.batch-table tr:nth-child(even) {
   background-color: #fafafa;
 }
 
-.results-table tr:hover {
+.batch-table tr:hover {
   background-color: #f1f1f1;
-}
-
-/* No Data */
-.results-container.no-results {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 200px; /* adjust as needed */
-}
-
-.no-data {
-  font-size: 18px;
-  font-weight: bold;
-  color: #555;
-  text-align: center;
 }
 
 /* Responsive */
 @media screen and (max-width: 768px) {
-  .results-filters {
-    flex-direction: column;
-    align-items: center;
+  .batch-form .batch-input-row input[type="text"],
+  .batch-form .batch-input-row input[type="date"] {
+    font-size: 12px;
   }
 
-  .results-table th,
-  .results-table td {
+  .batch-table th,
+  .batch-table td {
     font-size: 12px;
-    padding: 8px;
+    padding: 6px 8px;
   }
 }
