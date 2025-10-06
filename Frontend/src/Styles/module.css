@@ -1,0 +1,163 @@
+/* ================= Container ================= */
+.module-table-container {
+  max-width: 900px;
+  margin: 40px auto; /* centers horizontally */
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align: center; 
+}
+
+/* ================= Tables ================= */
+.module-table {
+  width: 100%;
+  max-width: 850px; /* prevents table from stretching too much */
+  margin: 0 auto 30px; /* center table horizontally */
+  border-collapse: collapse;
+}
+
+.module-table th,
+.module-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center; /* center table content */
+}
+
+.module-table th {
+  background-color: #5346a0; 
+  color: #fff;
+  font-weight: bold;
+}
+
+.module-table tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.module-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* ================= Buttons ================= */
+button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+button:hover {
+  opacity: 0.85;
+}
+
+/* Action Buttons */
+.module-action-buttons {
+  display: flex;
+  justify-content: center; /* center buttons */
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.module-action-buttons button {
+  background-color: #4CAF50;
+  color: #fff;
+}
+
+.module-action-buttons button:nth-child(2) {
+  background-color: #2196F3;
+}
+
+/* Table Row Buttons */
+.module-table button {
+  margin-right: 5px;
+}
+
+.module-table button:first-child {
+  background-color: #2196f3; /* Edit */
+  color: #fff;
+}
+
+.module-table button:last-child {
+  background-color: #F44336; /* Delete / Unassign */
+  color: #fff;
+}
+
+/* ================= Forms ================= */
+.module-form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* center form fields */
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.module-form input,
+.module-form select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  flex: 1;
+  min-width: 150px;
+}
+
+.module-form button {
+  background-color: #4CAF50;
+  color: #fff;
+}
+
+/* Cancel button */
+.module-form button[type="button"] {
+  background-color: #9E9E9E;
+}
+
+/* ================= Messages ================= */
+.module-message {
+  padding: 10px 15px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  display: none;
+}
+
+.module-message.show {
+  display: block;
+}
+
+.module-success {
+  background-color: #DFF2BF;
+  color: #4F8A10;
+}
+
+.module-error {
+  background-color: #FFBABA;
+  color: #D8000C;
+}
+
+/* ================= Dropdown ================= */
+select {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.top-row-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.top-row-actions button,
+.top-row-actions select {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  cursor: pointer;
+}
