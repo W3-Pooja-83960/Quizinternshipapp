@@ -1,396 +1,333 @@
-// import React, { useState, useEffect } from "react";
-// import "../Styles/module.css";
-// import moduleServices from "../Services/course_moduleService";
-// import courseService from "../Services/courseServices";
-
-// export default function Modules() {
-//   const [modules, setModules] = useState([]);
-//   const [courses, setCourses] = useState([]);
-//   const [selectedCourse, setSelectedCourse] = useState("");
-//   const [loading, setLoading] = useState(true);
-
-//   const [addForm, setAddForm] = useState({ module_id: "", module_name: "", course_id: "", course_name: "" });
-//   const [updateForm, setUpdateForm] = useState({ module_id: "", module_name: "", course_id: "", course_name: "" });
-
-//   const [adding, setAdding] = useState(false);
-//   const [editing, setEditing] = useState(false);
-//   const [message, setMessage] = useState({ type: "", text: "" });
-
-//   // Load courses
-//   useEffect(() => {
-//     async function loadCourses() {
-//       const data = await courseService.fetchAllCourses();
-//       setCourses(data || []);
-//     }
-//     loadCourses();
-//   }, []);
-
-//   // Load all modules
-//   useEffect(() => {
-//     async function loadModules() {
-//       setLoading(true);
-//       const data = await moduleServices.fetchAllCourseModules();
-//       setModules(data || []);
-//       setLoading(false);
-//     }
-//     loadModules();
-//   }, []);
-
-//   // Handle course selection
-//   const handleCourseChange = async (e) => {
-//     const courseId = e.target.value;
-//     setSelectedCourse(courseId);
-
-//     const data = !courseId
-//       ? await moduleServices.fetchAllCourseModules()
-//       : await moduleServices.fetchModulesByCourse(courseId);
-//     setModules(data || []);
-
-//     const selected = courses.find(c => c.course_id === courseId);
-//     setAddForm(prev => ({
-//       ...prev,
-//       course_id: selected?.course_id || "",
-//       course_name: selected?.course_name || "",
-//     }));
-//   };
-
-//   // Add module
-//   const handleAddChange = (e) => setAddForm({ ...addForm, [e.target.name]: e.target.value });
-//   const handleAddSubmit = async (e) => {
-//     e.preventDefault();
-//     try {
-//       await moduleServices.addCourseModule(addForm);
-//       setAdding(false);
-//       setMessage({ type: "success", text: "Module added!" });
-//       const data = selectedCourse
-//         ? await moduleServices.fetchModulesByCourse(selectedCourse)
-//         : await moduleServices.fetchAllCourseModules();
-//       setModules(data || []);
-//     } catch {
-//       setMessage({ type: "error", text: "Add failed!" });
-//     }
-//   };
-
-//   // Edit module
-//   const startEdit = (mod) => { setUpdateForm({ ...mod }); setEditing(true); };
-//   const handleUpdateChange = (e) => setUpdateForm({ ...updateForm, [e.target.name]: e.target.value });
-//   const handleUpdateSubmit = async (e) => {
-//     e.preventDefault();
-//     try {
-//       await moduleServices.updateCourseModule(updateForm);
-//       setEditing(false);
-//       setMessage({ type: "success", text: "Module updated!" });
-//       const data = selectedCourse
-//         ? await moduleServices.fetchModulesByCourse(selectedCourse)
-//         : await moduleServices.fetchAllCourseModules();
-//       setModules(data || []);
-//     } catch {
-//       setMessage({ type: "error", text: "Update failed!" });
-//     }
-//   };
-
-//   // Delete module
-//   const handleDelete = async (module_id) => {
-//     if (!window.confirm("Delete this module?")) return;
-//     try {
-//       await moduleServices.deleteCourseModule(selectedCourse, module_id);
-//       setMessage({ type: "success", text: "Module deleted!" });
-//       const data = selectedCourse
-//         ? await moduleServices.fetchModulesByCourse(selectedCourse)
-//         : await moduleServices.fetchAllCourseModules();
-//       setModules(data || []);
-//     } catch {
-//       setMessage({ type: "error", text: "Delete failed!" });
-//     }
-//   };
-
-//   if (loading) return <p className="module-loading">Loading modules...</p>;
-
-//   return (
-//     <div className="module-container">
-//       <h2>Module Management</h2>
-
-//       {message.text && <div className={`module-message ${message.type}`}>{message.text}</div>}
-
-//       {/* Course selection */}
-//       <div className="module-dropdown">
-//         <select
-//           className="module-course-dropdown"
-//           value={selectedCourse}
-//           onChange={handleCourseChange}
-//         >
-//           <option value="">All Courses</option>
-//           {courses.map(c => (
-//             <option key={c.course_id} value={c.course_id}>
-//               {c.course_name} - {c.course_id}
-//             </option>
-//           ))}
-//         </select>
-
-//         {!adding && !editing && (
-//           <button className="module-add-button" onClick={() => setAdding(true)}>Add Module</button>
-//         )}
-//       </div>
-
-//       {/* Add Form */}
-//       {adding && (
-//         <form onSubmit={handleAddSubmit} className="module-form-add">
-//           <input className="module-input module-id" type="text" name="module_id" placeholder="Module ID" value={addForm.module_id} onChange={handleAddChange} required />
-//           <input className="module-input module-name" type="text" name="module_name" placeholder="Module Name" value={addForm.module_name} onChange={handleAddChange} required />
-//           <input className="module-input course-id" type="text" name="course_id" placeholder="Course ID" value={addForm.course_id} readOnly />
-//           <input className="module-input course-name" type="text" name="course_name" placeholder="Course Name" value={addForm.course_name} readOnly />
-//           <button type="submit" className="module-submit-button">Add</button>
-//           <button type="button" className="module-cancel-button" onClick={() => setAdding(false)}>Cancel</button>
-//         </form>
-//       )}
-
-//       {/* Edit Form */}
-//       {editing && (
-//         <form onSubmit={handleUpdateSubmit} className="module-form-edit">
-//           <input className="module-input module-id" type="text" name="module_id" value={updateForm.module_id} disabled />
-//           <input className="module-input module-name" type="text" name="module_name" value={updateForm.module_name} onChange={handleUpdateChange} required />
-//           <input className="module-input course-id" type="text" name="course_id" value={updateForm.course_id} readOnly />
-//           <input className="module-input course-name" type="text" name="course_name" value={updateForm.course_name} readOnly />
-//           <button type="submit" className="module-submit-button">Update</button>
-//           <button type="button" className="module-cancel-button" onClick={() => setEditing(false)}>Cancel</button>
-//         </form>
-//       )}
-
-//       {/* Modules Table */}
-//       {modules.length === 0 ? (
-//         <p className="module-no-data">No modules found.</p>
-//       ) : (
-//         <table className="module-table">
-//         <thead>
-//           <tr>
-//             <th className="col-id">Module ID</th>
-//             <th className="col-name">Module Name</th>
-//             <th className="col-course-id">Course ID</th>
-//             <th className="col-course-name">Course Name</th>
-//             <th className="col-actions">Actions</th>
-//           </tr>
-//         </thead>
-
-//           <tbody>
-//             {modules.map(mod => (
-//               <tr key={mod.module_id}>
-//                 <td>{mod.module_id}</td>
-//                 <td>{mod.module_name}</td>
-//                 <td>{mod.course_id}</td>
-//                 <td>{mod.course_name}</td>
-//                 <td className="module-action-buttons">
-//                   <button className="module-edit-button" onClick={() => startEdit(mod)}>Edit</button>
-//                   <button className="module-delete-button" onClick={() => handleDelete(mod.module_id)}>Delete</button>
-//                 </td>
-//               </tr>
-//             ))}
-//           </tbody>
-//         </table>
-//       )}
-//     </div>
-//   );
-// }
-
 import React, { useState, useEffect } from "react";
-import "../Styles/module.css";
 import moduleServices from "../Services/course_moduleService";
-import courseService from "../Services/courseServices";
+import courseServices from "../Services/courseServices";
+import "../Styles/module.css";
 
 export default function Modules() {
   const [modules, setModules] = useState([]);
   const [courses, setCourses] = useState([]);
+  const [modulesByCourse, setModulesByCourse] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const [addForm, setAddForm] = useState({ module_id: "", module_name: "", course_id: "", course_name: "" });
-  const [updateForm, setUpdateForm] = useState({ module_id: "", module_name: "", course_id: "", course_name: "" });
+  const [addForm, setAddForm] = useState({ module_name: "" });
+  const [updateForm, setUpdateForm] = useState({ module_id: "", module_name: "" });
+  const [assignForm, setAssignForm] = useState({ course_id: "", module_id: "" });
 
   const [adding, setAdding] = useState(false);
   const [editing, setEditing] = useState(false);
-  const [message, setMessage] = useState({ type: "", text: "" });
+  const [assigning, setAssigning] = useState(false);
 
-  // Pagination
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const [message, setMessage] = useState({ type: "", text: "", visible: false });
 
-  // Load courses
+  const showMessage = (type, text, duration = 3000) => {
+    setMessage({ type, text, visible: true });
+    setTimeout(() => setMessage({ type: "", text: "", visible: false }), duration);
+  };
+
+  // ===== Load Modules & Courses =====
   useEffect(() => {
-    async function loadCourses() {
-      const data = await courseService.fetchAllCourses();
-      setCourses(data || []);
-    }
-    loadCourses();
+    const loadData = async () => {
+      setLoading(true);
+      const allModules = await moduleServices.fetchAllModules();
+      const allCourses = await courseServices.fetchAllCourses();
+      setModules(allModules || []);
+      setCourses(allCourses || []);
+      setLoading(false);
+    };
+    loadData();
   }, []);
 
-  // Load modules
-  useEffect(() => {
-    loadModules();
-  }, [selectedCourse]);
-
-  const loadModules = async () => {
-    setLoading(true);
-    const data = !selectedCourse
-      ? await moduleServices.fetchAllCourseModules()
-      : await moduleServices.fetchModulesByCourse(selectedCourse);
-    setModules(data || []);
-    setLoading(false);
-  };
-
-  // Handle course selection
-  const handleCourseChange = (e) => {
-    const courseId = e.target.value;
-    setSelectedCourse(courseId);
-
-    const selected = courses.find(c => c.course_id === courseId);
-    setAddForm(prev => ({
-      ...prev,
-      course_id: selected?.course_id || "",
-      course_name: selected?.course_name || "",
-    }));
-
-    setCurrentPage(1); // Reset to first page on course change
-  };
-
-  // Add module
+  // ===== CRUD Operations =====
   const handleAddChange = (e) => setAddForm({ ...addForm, [e.target.name]: e.target.value });
 
   const handleAddSubmit = async (e) => {
     e.preventDefault();
     try {
-      await moduleServices.addCourseModule(addForm);
+      const res = await moduleServices.addModule(addForm);
+      if (res.status === "success" && res.data) {
+        setModules((prev) => [...prev, res.data]);
+      }
+      setAddForm({ module_name: "" });
       setAdding(false);
-      setMessage({ type: "success", text: "Module added!" });
-      loadModules();
+      showMessage("success", "Module added!");
     } catch {
-      setMessage({ type: "error", text: "Add failed!" });
+      showMessage("error", "Failed to add module!");
     }
   };
 
-  // Edit module
-  const startEdit = (mod) => { setUpdateForm({ ...mod }); setEditing(true); };
+  const startEdit = (module) => {
+    setUpdateForm(module);
+    setEditing(true);
+  };
+
   const handleUpdateChange = (e) => setUpdateForm({ ...updateForm, [e.target.name]: e.target.value });
 
   const handleUpdateSubmit = async (e) => {
     e.preventDefault();
     try {
-      await moduleServices.updateCourseModule(updateForm);
+      await moduleServices.updateModule(updateForm.module_id, updateForm);
+      setModules((prev) =>
+        prev.map((m) => (m.module_id === updateForm.module_id ? updateForm : m))
+      );
       setEditing(false);
-      setMessage({ type: "success", text: "Module updated!" });
-      loadModules();
+      showMessage("success", "Module updated!");
     } catch {
-      setMessage({ type: "error", text: "Update failed!" });
+      showMessage("error", "Failed to update module!");
     }
   };
 
-  // Delete module
   const handleDelete = async (module_id) => {
     if (!window.confirm("Delete this module?")) return;
     try {
-      await moduleServices.deleteCourseModule(selectedCourse, module_id);
-      setMessage({ type: "success", text: "Module deleted!" });
-      loadModules();
+      await moduleServices.deleteModule(module_id);
+      setModules((prev) => prev.filter((m) => m.module_id !== module_id));
+      showMessage("success", "Module deleted!");
     } catch {
-      setMessage({ type: "error", text: "Delete failed!" });
+      showMessage("error", "Failed to delete module!");
     }
   };
 
-  if (loading) return <p className="module-loading">Loading modules...</p>;
+  // ===== Assign / Unassign Modules to Course =====
+  const handleAssignChange = (e) => setAssignForm({ ...assignForm, [e.target.name]: e.target.value });
+const handleAssignSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    const payload = {
+      module_id: parseInt(assignForm.module_id),
+      course_id: parseInt(assignForm.course_id),
+    };
 
-  // Pagination logic
-  const indexOfLast = currentPage * itemsPerPage;
-  const indexOfFirst = indexOfLast - itemsPerPage;
-  const currentModules = modules.slice(indexOfFirst, indexOfLast);
-  const totalPages = Math.ceil(modules.length / itemsPerPage);
+    const res = await moduleServices.assignModuleToCourse(payload);
+    console.log("Assign module response:", res);
+
+    if (res?.status === "success" && res?.data) {
+      const { module_name, course_name } = res.data || {};
+      if (selectedCourse && selectedCourse === payload.course_id.toString()) {
+        setModulesByCourse((prev) => [
+          ...prev,
+          { module_id: payload.module_id, module_name },
+        ]);
+      }
+      showMessage(
+        "success",
+        `Module "${module_name || "Unknown"}" assigned to "${course_name || "Unknown"}"!`
+      );
+      setAssignForm({ module_id: "", course_id: "" });
+      setAssigning(false);
+    } else {
+      showMessage(
+        "error",
+        typeof res?.error === "string"
+          ? res.error
+          : "Assignment failed! Please check backend route or payload."
+      );
+    }
+  } catch (err) {
+    console.error("Assign error:", err);
+    showMessage("error", "Something went wrong!");
+  }
+};
+
+
+  const handleUnassign = async (module_id) => {
+    if (!selectedCourse) return;
+    try {
+      await moduleServices.unassignModuleFromCourse({
+        module_id,
+        course_id: parseInt(selectedCourse),
+      });
+      showMessage("success", "Module unassigned!");
+      fetchModulesByCourse(selectedCourse);
+    } catch {
+      showMessage("error", "Failed to unassign module!");
+    }
+  };
+
+  // ===== Fetch Modules by Selected Course =====
+  const fetchModulesByCourse = async (courseId) => {
+    try {
+      const data = await moduleServices.fetchModulesByCourse(parseInt(courseId));
+      setModulesByCourse(data || []);
+    } catch {
+      showMessage("error", "Failed to load modules for course!");
+    }
+  };
+
+  const handleCourseSelect = (e) => {
+    const courseId = e.target.value;
+    setSelectedCourse(courseId);
+    if (!courseId) setModulesByCourse([]);
+    else fetchModulesByCourse(courseId);
+  };
+
+  if (loading) return <p>Loading modules...</p>;
 
   return (
-    <div className="module-container">
+    <div className="module-table-container">
       <h2>Module Management</h2>
 
-      {message.text && <div className={`module-message ${message.type}`}>{message.text}</div>}
-
-      {/* Course selection */}
-      <div className="module-dropdown">
-        <select
-          className="module-course-dropdown"
-          value={selectedCourse}
-          onChange={handleCourseChange}
+      {message.text && (
+        <div
+          className={`module-message module-${message.type} ${
+            message.visible ? "show" : ""
+          }`}
         >
-          <option value="">All Courses</option>
-          {courses.map(c => (
-            <option key={c.course_id} value={c.course_id}>
-              {c.course_name} - {c.course_id}
-            </option>
-          ))}
-        </select>
+       {typeof message.text === "string" ? message.text : JSON.stringify(message.text)}
 
-        {!adding && !editing && (
-          <button className="module-add-button" onClick={() => setAdding(true)}>Add Module</button>
-        )}
-      </div>
+        </div>
+      )}
+
+      {/* Action Buttons */}
+      {!adding && !editing && !assigning && (
+        <div className="module-action-buttons">
+          <button onClick={() => setAdding(true)}>Add Module</button>
+          <button onClick={() => setAssigning(true)}>Assign Module to Course</button>
+        </div>
+      )}
 
       {/* Add Form */}
       {adding && (
-        <form onSubmit={handleAddSubmit} className="module-form-add">
-          <input className="module-input module-id" type="text" name="module_id" placeholder="Module ID" value={addForm.module_id} onChange={handleAddChange} required />
-          <input className="module-input module-name" type="text" name="module_name" placeholder="Module Name" value={addForm.module_name} onChange={handleAddChange} required />
-          <input className="module-input course-id" type="text" name="course_id" placeholder="Course ID" value={addForm.course_id} readOnly />
-          <input className="module-input course-name" type="text" name="course_name" placeholder="Course Name" value={addForm.course_name} readOnly />
-          <button type="submit" className="module-submit-button">Add</button>
-          <button type="button" className="module-cancel-button" onClick={() => setAdding(false)}>Cancel</button>
+        <form onSubmit={handleAddSubmit} className="module-form">
+          <input
+            name="module_name"
+            placeholder="Module Name"
+            value={addForm.module_name}
+            onChange={handleAddChange}
+            required
+          />
+          <button type="submit">Add</button>
+          <button type="button" onClick={() => setAdding(false)}>
+            Cancel
+          </button>
         </form>
       )}
 
       {/* Edit Form */}
       {editing && (
-        <form onSubmit={handleUpdateSubmit} className="module-form-edit">
-          <input className="module-input module-id" type="text" name="module_id" value={updateForm.module_id} disabled />
-          <input className="module-input module-name" type="text" name="module_name" value={updateForm.module_name} onChange={handleUpdateChange} required />
-          <input className="module-input course-id" type="text" name="course_id" value={updateForm.course_id} readOnly />
-          <input className="module-input course-name" type="text" name="course_name" value={updateForm.course_name} readOnly />
-          <button type="submit" className="module-submit-button">Update</button>
-          <button type="button" className="module-cancel-button" onClick={() => setEditing(false)}>Cancel</button>
+        <form onSubmit={handleUpdateSubmit} className="module-form">
+          <input name="module_id" value={updateForm.module_id} disabled />
+          <input
+            name="module_name"
+            value={updateForm.module_name}
+            onChange={handleUpdateChange}
+            required
+          />
+          <button type="submit">Update</button>
+          <button type="button" onClick={() => setEditing(false)}>
+            Cancel
+          </button>
         </form>
       )}
 
-      {/* Modules Table */}
-      {modules.length === 0 ? (
-        <p className="module-no-data">No modules found.</p>
-      ) : (
-        <table className="module-table">
-          <thead>
-            <tr>
-              <th className="col-id">Module ID</th>
-              <th className="col-name">Module Name</th>
-              <th className="col-course-id">Course ID</th>
-              <th className="col-course-name">Course Name</th>
-              <th className="col-actions">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentModules.map(mod => (
-              <tr key={mod.module_id}>
-                <td>{mod.module_id}</td>
-                <td>{mod.module_name}</td>
-                <td>{mod.course_id}</td>
-                <td>{mod.course_name}</td>
-                <td className="module-action-buttons">
-                  <button className="module-edit-button" onClick={() => startEdit(mod)}>Edit</button>
-                  <button className="module-delete-button" onClick={() => handleDelete(mod.module_id)}>Delete</button>
-                </td>
-              </tr>
+      {/* Assign Form */}
+      {assigning && (
+        <form onSubmit={handleAssignSubmit} className="module-form">
+          <select
+            name="course_id"
+            value={assignForm.course_id}
+            onChange={handleAssignChange}
+            required
+          >
+            <option value="">Select Course</option>
+            {courses.map((c) => (
+              <option key={c.course_id} value={c.course_id}>
+                {c.course_name}
+              </option>
             ))}
-          </tbody>
-        </table>
+          </select>
+          <select
+            name="module_id"
+            value={assignForm.module_id}
+            onChange={handleAssignChange}
+            required
+          >
+            <option value="">Select Module</option>
+            {modules.map((m) => (
+              <option key={m.module_id} value={m.module_id}>
+                {m.module_name}
+              </option>
+            ))}
+          </select>
+          <button type="submit">Assign</button>
+          <button type="button" onClick={() => setAssigning(false)}>
+            Cancel
+          </button>
+        </form>
       )}
 
-      {/* Pagination */}
-      {modules.length > itemsPerPage && (
-        <div className="pagination">
-          <button disabled={currentPage === 1} onClick={() => setCurrentPage(prev => prev - 1)}>Prev</button>
-          <span>Page {currentPage} of {totalPages}</span>
-          <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(prev => prev + 1)}>Next</button>
-        </div>
+      {/* Course Dropdown */}
+      <div style={{ margin: "20px 0" }}>
+        <label>Select Course: </label>
+        <select value={selectedCourse} onChange={handleCourseSelect}>
+          <option value="">-- Select Course --</option>
+          {courses.map((c) => (
+            <option key={c.course_id} value={c.course_id}>
+              {c.course_name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Modules by Selected Course */}
+      {selectedCourse && (
+        <>
+          <h4>Modules for Selected Course</h4>
+          <table className="module-table">
+            <thead>
+              <tr>
+                <th>Module ID</th>
+                <th>Module Name</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {modulesByCourse.length > 0 ? (
+                modulesByCourse.map((m) => (
+                  <tr key={m.module_id}>
+                    <td>{m.module_id}</td>
+                    <td>{m.module_name}</td>
+                    <td>
+                      <button onClick={() => startEdit(m)}>Edit</button>
+                      <button onClick={() => handleUnassign(m.module_id)}>
+                        Unassign
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="3">No modules assigned to this course</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </>
       )}
+
+      {/* All Modules Table */}
+      <h4>All Modules</h4>
+      <table className="module-table">
+        <thead>
+          <tr>
+            <th>Module ID</th>
+            <th>Module Name</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {modules.map((m) => (
+            <tr key={m.module_id}>
+              <td>{m.module_id}</td>
+              <td>{m.module_name}</td>
+              <td>
+                <button onClick={() => startEdit(m)}>Edit</button>
+                <button onClick={() => handleDelete(m.module_id)}>Delete</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
