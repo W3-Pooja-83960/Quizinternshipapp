@@ -25,6 +25,9 @@ const NavBar = () => {
         <Link to="/staff">Staff</Link>
         <Link to="/students">Students</Link>       
         <Link to="/quizzes">Quizzes</Link>
+       <Link to="/results">Results</Link>
+
+
              
       </nav>
 
