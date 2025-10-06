@@ -70,7 +70,7 @@ async function deleteQuiz(id) {
   }
 }
 
-
+// Assign quiz to group
 export const sendQuizToGroup = async ({ quiz_id, group_name }) => {
   try {
     const token = localStorage.getItem("token");
