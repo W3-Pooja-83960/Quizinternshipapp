@@ -34,22 +34,21 @@ export default function Quiz() {
   }, []);
 
   // Fetch quizzes + question count
- const loadQuizzes = async () => {
-  try {
-    const data = await quizServices.fetchAllQuizzes();
-    const counts = await quizServices.fetchAllQuestionCounts(); // { quiz_id: count }
+  const loadQuizzes = async () => {
+    try {
+      const data = await quizServices.fetchAllQuizzes();
+      const counts = await quizServices.fetchAllQuestionCounts(); // { quiz_id: count }
 
-    const quizzesWithCount = data.map(q => ({
-      ...q,
-      questionCount: counts[q.quiz_id] || 0
-    }));
+      const quizzesWithCount = data.map(q => ({
+        ...q,
+        questionCount: counts[q.quiz_id] || 0
+      }));
 
-    setQuizzes(quizzesWithCount);
-  } catch (err) {
-    console.error("Failed to load quizzes:", err);
-  }
-};
-
+      setQuizzes(quizzesWithCount);
+    } catch (err) {
+      console.error("Failed to load quizzes:", err);
+    }
+  };
 
   const loadDropdownData = async () => {
     setCourses(await AllServices.fetchAllCourses());
@@ -107,33 +106,42 @@ export default function Quiz() {
   const handleAddQuestions = (quizId) => navigate(`/questions/${quizId}`);
   const handleViewQuestions = (quizId) => navigate(`/view-questions/${quizId}`);
 
- const handleSendToGroup = async (quiz) => {
-  if (!quiz.group_name) return alert("Select a group first in the quiz form");
+  const handleSendToGroup = async (quiz) => {
+    if (!quiz.group_name) return alert("Select a group first in the quiz form");
 
-  try {
-    const res = await quizServices.sendQuizToGroup({
-      quiz_id: quiz.quiz_id,
-      group_name: quiz.group_name,
-    });
+    try {
+      const res = await quizServices.sendQuizToGroup({
+        quiz_id: quiz.quiz_id,
+        group_name: quiz.group_name,
+      });
 
-    if (res.status === "success") alert("Quiz sent to group successfully!");
-    else alert(res.message);
-  } catch (err) {
-    alert(err.response?.data?.message || "Failed to send quiz to group");
-  }
-};
-
+      if (res.status === "success") alert("Quiz sent to group successfully!");
+      else alert(res.message);
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to send quiz to group");
+    }
+  };
 
   return (
     <div className="quiz-table-container">
       <h2>Quiz Management</h2>
       <div className="quiz-header">
+        {/* Updated Add Quiz button */}
         <button
           className="quiz-add-button"
           onClick={() => {
             setShowForm(true);
             setEditingId(null);
-            resetForm();
+            setFormData({
+              quiz_title: "",
+              duration: "",
+              marks: "",
+              module_id: "",
+              staff_id: "",
+              course_id: "",
+              group_name: "",
+              is_active: 1,
+            });
           }}
         >
           Add Quiz
@@ -262,3 +270,5 @@ export default function Quiz() {
     </div>
   );
 }
+
+
