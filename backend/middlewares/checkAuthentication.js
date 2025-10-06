@@ -22,6 +22,7 @@ const checkAuthentication = (request, response, next) => {
     console.log("decodedToken: ", decodedToken);
 
     request.user = decodedToken;
+    // console.log("user: ", request.user);
     console.log("current user role: ", request.user.role);
 
     return next();

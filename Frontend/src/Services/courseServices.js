@@ -65,6 +65,8 @@ export async function deleteCourse(id) {
   }
 }
 
+
+
 export default {
   fetchAllCourses,
   addCourse,  

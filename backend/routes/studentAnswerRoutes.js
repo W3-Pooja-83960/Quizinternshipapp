@@ -82,7 +82,8 @@ router.post("/add-multiple-ans",checkRoles(["admin"]), (req, res) => {
   const insertSql = `
     INSERT INTO ${STUDENTS_ANS_TABLE} (attempt_id, questions_id, is_correct)
     VALUES ?
-    ON DUPLICATE KEY UPDATE is_correct = VALUES(is_correct)   `;
+    ON DUPLICATE KEY UPDATE is_correct = VALUES(is_correct)
+  `;
 
   pool.query(insertSql, [values], (err) => {
     if (err) return res.status(500).json({ status: "error", message: err.sqlMessage });

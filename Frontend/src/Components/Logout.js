@@ -14,7 +14,7 @@ function Logout() {
     navigate("/login");
   }, [navigate]);
 
-  return null; 
+  return null; // nothing to render
 }
 
 export default Logout;
