@@ -10,7 +10,7 @@ export default function Modules() {
   const [selectedCourse, setSelectedCourse] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const [addForm, setAddForm] = useState({ module_name: "" });
+  const [addForm, setAddForm] = useState({ module_id: "", module_name: "" });
   const [updateForm, setUpdateForm] = useState({ module_id: "", module_name: "" });
   const [assignForm, setAssignForm] = useState({ course_id: "", module_id: "" });
 
@@ -38,24 +38,36 @@ export default function Modules() {
     loadData();
   }, []);
 
-  // ===== CRUD Operations =====
+  // ===== Add Module Handlers =====
   const handleAddChange = (e) => setAddForm({ ...addForm, [e.target.name]: e.target.value });
+
+  const handleAddClick = () => {
+    setAddForm({ module_id: "", module_name: "" }); // user will enter both fields
+    setAdding(true);
+  };
 
   const handleAddSubmit = async (e) => {
     e.preventDefault();
+    if (!addForm.module_id || !addForm.module_name) {
+      showMessage("error", "Module ID and Module Name are required!");
+      return;
+    }
     try {
       const res = await moduleServices.addModule(addForm);
       if (res.status === "success" && res.data) {
         setModules((prev) => [...prev, res.data]);
+        showMessage("success", "Module added!");
+      } else {
+        showMessage("error", res.error || "Failed to add module!");
       }
-      setAddForm({ module_name: "" });
+      setAddForm({ module_id: "", module_name: "" });
       setAdding(false);
-      showMessage("success", "Module added!");
     } catch {
       showMessage("error", "Failed to add module!");
     }
   };
 
+  // ===== Edit Module Handlers =====
   const startEdit = (module) => {
     setUpdateForm(module);
     setEditing(true);
@@ -77,6 +89,7 @@ export default function Modules() {
     }
   };
 
+  // ===== Delete Module =====
   const handleDelete = async (module_id) => {
     if (!window.confirm("Delete this module?")) return;
     try {
@@ -90,45 +103,44 @@ export default function Modules() {
 
   // ===== Assign / Unassign Modules to Course =====
   const handleAssignChange = (e) => setAssignForm({ ...assignForm, [e.target.name]: e.target.value });
-const handleAssignSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    const payload = {
-      module_id: parseInt(assignForm.module_id),
-      course_id: parseInt(assignForm.course_id),
-    };
 
-    const res = await moduleServices.assignModuleToCourse(payload);
-    console.log("Assign module response:", res);
+  const handleAssignSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const payload = {
+        module_id: parseInt(assignForm.module_id),
+        course_id: parseInt(assignForm.course_id),
+      };
 
-    if (res?.status === "success" && res?.data) {
-      const { module_name, course_name } = res.data || {};
-      if (selectedCourse && selectedCourse === payload.course_id.toString()) {
-        setModulesByCourse((prev) => [
-          ...prev,
-          { module_id: payload.module_id, module_name },
-        ]);
+      const res = await moduleServices.assignModuleToCourse(payload);
+
+      if (res?.status === "success" && res?.data) {
+        const { module_name, course_name } = res.data || {};
+        if (selectedCourse && selectedCourse === payload.course_id.toString()) {
+          setModulesByCourse((prev) => [
+            ...prev,
+            { module_id: payload.module_id, module_name },
+          ]);
+        }
+        showMessage(
+          "success",
+          `Module "${module_name || "Unknown"}" assigned to "${course_name || "Unknown"}"!`
+        );
+        setAssignForm({ module_id: "", course_id: "" });
+        setAssigning(false);
+      } else {
+        showMessage(
+          "error",
+          typeof res?.error === "string"
+            ? res.error
+            : "Assignment failed! Please check backend route or payload."
+        );
       }
-      showMessage(
-        "success",
-        `Module "${module_name || "Unknown"}" assigned to "${course_name || "Unknown"}"!`
-      );
-      setAssignForm({ module_id: "", course_id: "" });
-      setAssigning(false);
-    } else {
-      showMessage(
-        "error",
-        typeof res?.error === "string"
-          ? res.error
-          : "Assignment failed! Please check backend route or payload."
-      );
+    } catch (err) {
+      console.error("Assign error:", err);
+      showMessage("error", "Something went wrong!");
     }
-  } catch (err) {
-    console.error("Assign error:", err);
-    showMessage("error", "Something went wrong!");
-  }
-};
-
+  };
 
   const handleUnassign = async (module_id) => {
     if (!selectedCourse) return;
@@ -169,19 +181,16 @@ const handleAssignSubmit = async (e) => {
 
       {message.text && (
         <div
-          className={`module-message module-${message.type} ${
-            message.visible ? "show" : ""
-          }`}
+          className={`module-message module-${message.type} ${message.visible ? "show" : ""}`}
         >
-       {typeof message.text === "string" ? message.text : JSON.stringify(message.text)}
-
+          {typeof message.text === "string" ? message.text : JSON.stringify(message.text)}
         </div>
       )}
 
       {/* Action Buttons */}
       {!adding && !editing && !assigning && (
         <div className="module-action-buttons">
-          <button onClick={() => setAdding(true)}>Add Module</button>
+          <button onClick={handleAddClick}>Add Module</button>
           <button onClick={() => setAssigning(true)}>Assign Module to Course</button>
         </div>
       )}
@@ -190,6 +199,13 @@ const handleAssignSubmit = async (e) => {
       {adding && (
         <form onSubmit={handleAddSubmit} className="module-form">
           <input
+            name="module_id"
+            placeholder="Module ID"
+            value={addForm.module_id}
+            onChange={handleAddChange}
+            required
+          />
+          <input
             name="module_name"
             placeholder="Module Name"
             value={addForm.module_name}
@@ -197,9 +213,7 @@ const handleAssignSubmit = async (e) => {
             required
           />
           <button type="submit">Add</button>
-          <button type="button" onClick={() => setAdding(false)}>
-            Cancel
-          </button>
+          <button type="button" onClick={() => setAdding(false)}>Cancel</button>
         </form>
       )}
 
@@ -214,9 +228,7 @@ const handleAssignSubmit = async (e) => {
             required
           />
           <button type="submit">Update</button>
-          <button type="button" onClick={() => setEditing(false)}>
-            Cancel
-          </button>
+          <button type="button" onClick={() => setEditing(false)}>Cancel</button>
         </form>
       )}
 
@@ -250,9 +262,7 @@ const handleAssignSubmit = async (e) => {
             ))}
           </select>
           <button type="submit">Assign</button>
-          <button type="button" onClick={() => setAssigning(false)}>
-            Cancel
-          </button>
+          <button type="button" onClick={() => setAssigning(false)}>Cancel</button>
         </form>
       )}
 
@@ -289,9 +299,7 @@ const handleAssignSubmit = async (e) => {
                     <td>{m.module_name}</td>
                     <td>
                       <button onClick={() => startEdit(m)}>Edit</button>
-                      <button onClick={() => handleUnassign(m.module_id)}>
-                        Unassign
-                      </button>
+                      <button onClick={() => handleUnassign(m.module_id)}>Unassign</button>
                     </td>
                   </tr>
                 ))
