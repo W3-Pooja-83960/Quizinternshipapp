@@ -1,9 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, FlatList, ActivityIndicator, Alert, BackHandler } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  FlatList,
+  ActivityIndicator,
+  Alert,
+  BackHandler,
+} from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { startAttempt, fetchQuestionsByQuiz, submitAnswers } from "../Service/quizAttemptService";
-import QuizTimer from "../Timer/QuizTimer"; 
+import {
+  startAttempt,
+  fetchQuestionsByQuiz,
+  submitAnswers,
+} from "../Service/quizAttemptService";
+import QuizTimer from "../Timer/QuizTimer";
 import styles from "../style/quizAttemptStyle";
 
 export default function QuizAttempt({ route, navigation }) {
@@ -25,7 +37,11 @@ export default function QuizAttempt({ route, navigation }) {
         return true; // prevent default behavior
       };
 
-      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      // ✅ Correct usage: addEventListener returns a subscription
+      const backHandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        onBackPress
+      );
 
       // Disable header back button
       const beforeRemoveListener = navigation.addListener("beforeRemove", (e) => {
@@ -34,9 +50,10 @@ export default function QuizAttempt({ route, navigation }) {
         Alert.alert("Hold on!", "You cannot go back while the quiz is in progress.");
       });
 
+      // ✅ Proper cleanup
       return () => {
-        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
-        navigation.removeListener("beforeRemove", beforeRemoveListener);
+        backHandler.remove();
+        beforeRemoveListener();
       };
     }, [navigation, quizLocked])
   );
@@ -79,7 +96,7 @@ export default function QuizAttempt({ route, navigation }) {
       return;
     }
 
-    const formattedAnswers = Object.keys(answers).map(qid => ({
+    const formattedAnswers = Object.keys(answers).map((qid) => ({
       question_id: parseInt(qid),
       answer: answers[qid],
     }));
@@ -136,12 +153,12 @@ export default function QuizAttempt({ route, navigation }) {
   const renderQuestion = ({ item }) => (
     <View style={styles.card}>
       <Text style={styles.question}>{item.question_text}</Text>
-      {["option_a", "option_b", "option_c", "option_d"].map(optKey => (
+      {["option_a", "option_b", "option_c", "option_d"].map((optKey) => (
         <TouchableOpacity
           key={optKey}
           style={[
             styles.option,
-            answers[item.question_id] === item[optKey] && styles.selected
+            answers[item.question_id] === item[optKey] && styles.selected,
           ]}
           onPress={() => handleSelect(item.question_id, item[optKey])}
           disabled={quizLocked}
@@ -159,14 +176,14 @@ export default function QuizAttempt({ route, navigation }) {
 
       <FlatList
         data={questions}
-        keyExtractor={item => item.question_id.toString()}
+        keyExtractor={(item) => item.question_id.toString()}
         renderItem={renderQuestion}
         contentContainerStyle={{ paddingBottom: 120 }}
       />
 
-      <TouchableOpacity 
-        style={styles.submitBtn} 
-        onPress={handleSubmit} 
+      <TouchableOpacity
+        style={styles.submitBtn}
+        onPress={handleSubmit}
         disabled={quizLocked}
       >
         <Text style={styles.submitText}>Submit Quiz</Text>
